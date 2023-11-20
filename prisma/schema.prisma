@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Row {
+  id             String      @id @default(uuid())
+  termValue      String
+  termUnits      String
+  mileageValue   String
+  ageNewer       Boolean
+  odometerNewer  Boolean
+  cost           String
+  deductible     String
+  aggregateLimit String
+  options        Option[]
+  Ratesheet      Ratesheet[]
+}
+
+model Option {
+  id        String        @id @default(uuid())
+  package   String
+  detailsId String
+  details   OptionDetails @relation(fields: [detailsId], references: [id])
+  rateId    String
+  row       Row           @relation(fields: [rateId], references: [id])
+}
+
+model OptionDetails {
+  id     String   @id @default(uuid())
+  term   String
+  cost   String
+  Option Option[]
+}
+
+model Ratesheet {
+  name        String                 @id @unique
+  rows        Row[]
+  disclosures RatesheetDisclosures[]
+  coverages   RatesheetCoverages[]
+
+  @@index(name)
+}
+
+model RatesheetDisclosures {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  rateSheet   Ratesheet? @relation(fields: [rateSheetId], references: [name])
+  rateSheetId String?
+}
+
+model RatesheetCoverages {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  rateSheet   Ratesheet? @relation(fields: [rateSheetId], references: [name])
+  rateSheetId String?
+}
