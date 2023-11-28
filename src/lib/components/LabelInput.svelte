@@ -5,11 +5,12 @@
 	export let value: string;
 </script>
 
-<label class="flex flex-col gap-1 font-semibold text-base"
+<label class="flex flex-col min-w-min gap-1 font-semibold text-base"
 	>{label}
 	<input
+		size="1"
 		type="text"
-		class="border border-ts-gray-md rounded py-3 px-4"
+		class="border-b border-ts-gray-md font-normal"
 		{name}
 		{placeholder}
 		bind:value

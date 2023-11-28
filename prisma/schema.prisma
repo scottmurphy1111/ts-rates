@@ -10,57 +10,62 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Row {
-  id             String      @id @default(uuid())
-  termValue      String
-  termUnits      String
-  mileageValue   String
-  ageNewer       Boolean
-  odometerNewer  Boolean
-  cost           String
-  deductible     String
-  aggregateLimit String
-  options        Option[]
-  Ratesheet      Ratesheet[]
-}
-
-model Option {
-  id        String        @id @default(uuid())
-  package   String
-  detailsId String
-  details   OptionDetails @relation(fields: [detailsId], references: [id])
-  rateId    String
-  row       Row           @relation(fields: [rateId], references: [id])
-}
-
-model OptionDetails {
-  id     String   @id @default(uuid())
-  term   String
-  cost   String
-  Option Option[]
-}
-
 model Ratesheet {
-  name        String                 @id @unique
+  id          String                 @id @default(uuid())
+  name        String                 @unique
+  title       String
   rows        Row[]
+  options     Option[]
   disclosures RatesheetDisclosures[]
   coverages   RatesheetCoverages[]
 
   @@index(name)
 }
 
+model Row {
+  id                 String    @id @default(uuid())
+  termValue          String
+  termUnit           String
+  mileageValue       String
+  costNewerLowMiles  String
+  costNewerHighMiles String
+  costOlderLowMiles  String
+  costOlderHighMiles String
+  deductible         String
+  aggregateLimit     String
+  ratesheetId        String
+  ratesheet          Ratesheet @relation(fields: [ratesheetId], references: [id])
+}
+
+model Option {
+  id          String          @id @default(uuid())
+  package     String
+  details     OptionDetails[]
+  ratesheetId String
+  ratesheet   Ratesheet       @relation(fields: [ratesheetId], references: [id])
+}
+
+model OptionDetails {
+  id        String @id @default(uuid())
+  termValue String
+  termUnit  String
+  cost      String
+  optionId  String
+  option    Option @relation(fields: [optionId], references: [id])
+}
+
 model RatesheetDisclosures {
-  id          String     @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String
-  rateSheet   Ratesheet? @relation(fields: [rateSheetId], references: [name])
-  rateSheetId String?
+  ratesheetId String
+  ratesheet   Ratesheet @relation(fields: [ratesheetId], references: [id])
 }
 
 model RatesheetCoverages {
-  id          String     @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String
-  rateSheet   Ratesheet? @relation(fields: [rateSheetId], references: [name])
-  rateSheetId String?
+  ratesheetId String
+  ratesheet   Ratesheet @relation(fields: [ratesheetId], references: [id])
 }

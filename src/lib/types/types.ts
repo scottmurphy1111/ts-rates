@@ -1,4 +1,11 @@
-import type { Ratesheet, Row, RatesheetDisclosures, RatesheetCoverages } from '@prisma/client';
+import type {
+	Ratesheet,
+	Row,
+	RatesheetDisclosures,
+	RatesheetCoverages,
+	Option,
+	OptionDetails
+} from '@prisma/client';
 
 export type Output = {
 	cardTypes: string[];
@@ -8,6 +15,11 @@ export type Output = {
 
 export type RatesheetsWithIncludes = Ratesheet & {
 	rows: Row[];
+	options: OptionWithIncludes[];
 	disclosures: RatesheetDisclosures[];
 	coverages: RatesheetCoverages[];
+};
+
+export type OptionWithIncludes = Option & {
+	details: OptionDetails[];
 };
