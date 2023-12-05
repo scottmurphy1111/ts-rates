@@ -18,7 +18,7 @@
 			markup: $markup.toString(),
 			customLogo: $customLogo
 		};
-		console.log('data', data);
+		// console.log('data', data);
 		goto('/output', { state: data });
 		// fetch('/output', {
 		// 	method: 'POST',
@@ -109,17 +109,29 @@
 					required
 				/>
 			</label>
-			<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
-				>Upload a Logo (Optional)
-				<input
-					type="file"
-					name="customLogo"
-					accept="image/png, image/jpeg"
-					bind:value={$customLogo}
-				/>
-			</label>
-			<button class="btn btn-primary">Generate</button>
-			<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base"
+			<div class="flex flex-col gap-8">
+				<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="cardTypes">
+					Select Dealership
+					<select required class="select" value={'dealer'} name="cardTypes">
+						<option value="1">Dealership 1</option>
+						<option value="2">Dealership 2</option>
+						<option value="3">Dealership 3</option>
+						<!-- {#each Object.keys(products) as product (product)}
+              <option value={product}>{products[product]}</option>
+            {/each} -->
+					</select></label
+				>
+				<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
+					>Upload a Logo (Optional)
+					<input
+						type="file"
+						name="customLogo"
+						accept="image/png, image/jpeg"
+						bind:value={$customLogo}
+					/>
+				</label>
+				<button class="btn variant-filled-primary">Generate</button>
+				<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base"
 				>Term Length
 				<select class="border border-ts-gray-md rounded py-3 px-4" bind:value={$term}>
 					{#each termOptions as option}
@@ -127,7 +139,7 @@
 					{/each}
 				</select>
 			</label> -->
-			<!-- <div>
+				<!-- <div>
 				<span class="font-medium mb-2 flex">Your estimated weekly payment amount is:</span>
 				<div class="w-full flex flex-col font-semibold mb-4 text-center">
 					<span class="w-full inline-flex text-4xl justify-center">
@@ -140,6 +152,7 @@
 					subject to credit approval and may differ from the above calculation.</span
 				>
 			</div> -->
+			</div>
 		</div>
 	</form>
 	<div class="w-full mt-8 flex justify-center items-center">

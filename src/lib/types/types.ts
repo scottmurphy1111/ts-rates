@@ -1,10 +1,12 @@
 import type {
 	Ratesheet,
 	Row,
-	RatesheetDisclosures,
 	RatesheetCoverages,
 	Option,
-	OptionDetails
+	OptionDetails,
+	OptionPackage,
+	DisclosuresSet,
+	Disclosure
 } from '@prisma/client';
 
 export type Output = {
@@ -16,10 +18,15 @@ export type Output = {
 export type RatesheetsWithIncludes = Ratesheet & {
 	rows: Row[];
 	options: OptionWithIncludes[];
-	disclosures: RatesheetDisclosures[];
+	disclosuresSet: DisclosuresSetWithIncludes;
 	coverages: RatesheetCoverages[];
 };
 
+export type DisclosuresSetWithIncludes = DisclosuresSet & {
+	disclosures: Disclosure[];
+};
+
 export type OptionWithIncludes = Option & {
-	details: OptionDetails[];
+	package: OptionPackage;
+	details: OptionDetails;
 };

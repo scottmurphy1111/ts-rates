@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind variants;
 
 @font-face {
 	/* Reference name */
@@ -8,6 +9,11 @@
 	/* For multiple files use commas, ex: url(), url(), ... */
 	src: url('/fonts/Montserrat-VariableFont_wght.ttf'),
 		url('/fonts/Montserrat-Italic-VariableFont_wght.ttf');
+}
+
+html,
+body {
+	@apply h-full overflow-hidden;
 }
 
 body {
@@ -20,13 +26,13 @@ h2 {
 	line-height: 2rem;
 }
 
-.btn {
-	@apply font-semibold py-2 px-4 rounded-md text-center;
+/* .btn {
+	@apply rounded-md px-4 py-2 text-center font-semibold;
 }
 
 .btn-primary {
-	@apply bg-ts-blue text-white text-sm;
-}
+	@apply bg-ts-blue text-sm text-white;
+} */
 
 .section-header {
 	@apply mb-4;
@@ -41,4 +47,15 @@ h1 {
 
 h2 {
 	@apply text-3xl font-semibold;
+}
+
+.input,
+.textarea,
+.select,
+.input-group {
+	@apply bg-white dark:bg-black;
+}
+
+.card {
+	@apply bg-white dark:bg-black;
 }

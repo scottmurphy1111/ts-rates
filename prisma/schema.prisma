@@ -11,13 +11,15 @@ generator client {
 }
 
 model Ratesheet {
-  id          String                 @id @default(uuid())
-  name        String                 @unique
-  title       String
-  rows        Row[]
-  options     Option[]
-  disclosures RatesheetDisclosures[]
-  coverages   RatesheetCoverages[]
+  id               String               @id @default(uuid())
+  name             String               @unique
+  title            String
+  subtitle         String
+  rows             Row[]
+  options          Option[]
+  disclosuresSetId String
+  disclosuresSet   DisclosuresSet       @relation(fields: [disclosuresSetId], references: [id])
+  coverages        RatesheetCoverages[]
 
   @@index(name)
 }
@@ -38,28 +40,43 @@ model Row {
 }
 
 model Option {
-  id          String          @id @default(uuid())
-  package     String
-  details     OptionDetails[]
-  ratesheetId String
-  ratesheet   Ratesheet       @relation(fields: [ratesheetId], references: [id])
+  id              String         @id @default(uuid())
+  package         OptionPackage? @relation(fields: [optionPackageId], references: [id])
+  details         OptionDetails? @relation(fields: [optionDetailsId], references: [id])
+  ratesheetId     String
+  ratesheet       Ratesheet      @relation(fields: [ratesheetId], references: [id])
+  optionPackageId String?        @unique
+  optionDetailsId String?        @unique
+}
+
+model OptionPackage {
+  id     String  @id @default(uuid())
+  name   String
+  option Option?
 }
 
 model OptionDetails {
-  id        String @id @default(uuid())
+  id        String  @id @default(uuid())
   termValue String
   termUnit  String
   cost      String
-  optionId  String
-  option    Option @relation(fields: [optionId], references: [id])
+  option    Option?
 }
 
-model RatesheetDisclosures {
-  id          String    @id @default(uuid())
+model DisclosuresSet {
+  id          String       @id @default(uuid())
   title       String
-  description String
-  ratesheetId String
-  ratesheet   Ratesheet @relation(fields: [ratesheetId], references: [id])
+  disclosures Disclosure[]
+  ratesheet   Ratesheet[]
+}
+
+model Disclosure {
+  id               String         @id @default(uuid())
+  title            String
+  description      String
+  order            String
+  disclosuresSetId String
+  disclosuresSet   DisclosuresSet @relation(fields: [disclosuresSetId], references: [id])
 }
 
 model RatesheetCoverages {
