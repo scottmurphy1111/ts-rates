@@ -2,7 +2,8 @@ import { client } from '$lib/server/prisma';
 import type { DisclosuresSetWithIncludes } from '$lib/types/types';
 import type { Actions } from '@sveltejs/kit';
 
-export const load = async () => {
+export const load = async ({ depends }) => {
+	depends('data:disclosuresSets');
 	const disclosuresSets = await client.disclosuresSet.findMany({
 		include: {
 			disclosures: true
@@ -17,11 +18,11 @@ export const actions: Actions = {
 	selectDisclosuresSet: async ({ request }) => {
 		const formData = await request.formData();
 
-		const selectedDisclosuresSet = formData.get('selectedDisclosuresSet');
+		const selectedDisclosuresSetId = formData.get('selectedDisclosuresSetId');
 
 		const disclosuresSet = await client.disclosuresSet.findUnique({
 			where: {
-				id: selectedDisclosuresSet
+				id: selectedDisclosuresSetId as string
 			},
 			include: {
 				disclosures: true

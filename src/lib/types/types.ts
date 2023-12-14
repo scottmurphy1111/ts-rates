@@ -1,12 +1,11 @@
 import type {
 	Ratesheet,
 	Row,
-	RatesheetCoverages,
 	Option,
-	OptionDetails,
-	OptionPackage,
 	DisclosuresSet,
-	Disclosure
+	Disclosure,
+	CoveragesSet,
+	Coverage
 } from '@prisma/client';
 
 export type Output = {
@@ -15,18 +14,16 @@ export type Output = {
 	customLogo?: string;
 };
 
-export type RatesheetsWithIncludes = Ratesheet & {
+export type RatesheetWithIncludes = Ratesheet & {
 	rows: Row[];
-	options: OptionWithIncludes[];
+	options: Option[];
 	disclosuresSet: DisclosuresSetWithIncludes;
-	coverages: RatesheetCoverages[];
+	coveragesSet: CoveragesSetWithIncludes;
 };
 
 export type DisclosuresSetWithIncludes = DisclosuresSet & {
 	disclosures: Disclosure[];
 };
-
-export type OptionWithIncludes = Option & {
-	package: OptionPackage;
-	details: OptionDetails;
+export type CoveragesSetWithIncludes = CoveragesSet & {
+	coverages: Coverage[];
 };

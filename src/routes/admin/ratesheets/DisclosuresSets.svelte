@@ -1,0 +1,42 @@
+<script lang="ts">
+	import type { DisclosuresSetWithIncludes, RatesheetWithIncludes } from '$lib/types/types';
+
+	export let ratesheet: RatesheetWithIncludes | null = null;
+	export let disclosuresSets: DisclosuresSetWithIncludes[] = [];
+
+	$: selectedDisclosureSet = ratesheet?.disclosuresSet?.id ?? '';
+</script>
+
+<div class="flex flex-col gap-2">
+	<h2 class="h2">Disclosures Set</h2>
+	<div class="flex flex-col w-full">
+		<label for="selectedDisclosuresSetId" class="label">Disclosure Sets</label>
+		<select class="select" name="selectedDisclosuresSetId" value={selectedDisclosureSet}>
+			{#if disclosuresSets}
+				<option value disabled>Make a selection</option>
+				{#each disclosuresSets as set}
+					<option value={set.id} selected={set.id === selectedDisclosureSet}>
+						{set.name}
+					</option>
+				{/each}
+			{/if}
+		</select>
+	</div>
+</div>
+<div class="flex flex-col gap-2">
+	<h3 class="h3">Disclosures</h3>
+	<div class="flex flex-col gap-2">
+		{#if ratesheet?.disclosuresSet.disclosures}
+			<div class="grid grid-cols-[1fr_3fr] gap-2 p-4">
+				<span>Title</span>
+				<span>Description</span>
+			</div>
+			{#each ratesheet?.disclosuresSet.disclosures.sort((a, b) => Number(a.order) - Number(b.order)) as disclosure}
+				<div class="table grid grid-cols-[1fr_3fr] gap-2 p-4">
+					<span>{disclosure.title}</span>
+					<span>{disclosure.description}</span>
+				</div>
+			{/each}
+		{/if}
+	</div>
+</div>

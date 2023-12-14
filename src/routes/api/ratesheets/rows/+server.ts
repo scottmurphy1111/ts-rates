@@ -7,27 +7,21 @@ export const DELETE: RequestHandler = async ({ url }) => {
 
 	await client.row.delete({
 		where: {
-			id: id
+			id: id as string
 		}
 	});
 
 	const updatedRatesheet = await client.ratesheet.findUnique({
 		where: {
-			id: ratesheetId
+			id: ratesheetId as string
 		},
 		include: {
 			rows: true,
-			options: {
-				include: {
-					details: true
-				}
-			},
-			disclosures: true,
-			coverages: true
+			options: true,
+			disclosuresSet: true,
+			coveragesSet: true
 		}
 	});
-
-	console.log('updatedRatesheet', updatedRatesheet);
 
 	return json(updatedRatesheet);
 };

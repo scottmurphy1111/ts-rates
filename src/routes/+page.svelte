@@ -18,17 +18,8 @@
 			markup: $markup.toString(),
 			customLogo: $customLogo
 		};
-		// console.log('data', data);
+
 		goto('/output', { state: data });
-		// fetch('/output', {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		'Content-Type': 'application/json'
-		// 	},
-		// 	body: JSON.stringify(data)
-		// }).then((res) => {
-		// 	console.log('res', res);
-		// });
 	}
 
 	const products: Record<string, any> = {

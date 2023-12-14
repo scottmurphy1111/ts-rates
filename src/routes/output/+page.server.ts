@@ -17,11 +17,5 @@ export const load: PageServerLoad = ({ cookies }) => {
 			markup: JSON.parse(markup),
 			customLogo
 		}
-		// return {
-		// 	post: {
-		// 		title: `Title for ${params.slug} goes here`,
-		// 		content: `Content for ${params.slug} goes here`
-		// 	}
-		// };
 	};
 };

@@ -1,29 +1,45 @@
 import type { PageServerLoad } from '../../$types';
 import type { Actions } from '../../$types';
 import { client } from '$lib/server/prisma';
-import type { RatesheetsWithIncludes } from '$lib/types/types';
+import type {
+	CoveragesSetWithIncludes,
+	DisclosuresSetWithIncludes,
+	RatesheetWithIncludes
+} from '$lib/types/types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ depends }) => {
+	depends('data:ratesheets');
 	const ratesheets = await client.ratesheet.findMany({
 		include: {
 			rows: true,
-			options: {
-				include: {
-					package: true,
-					details: true
-				}
-			},
+			options: true,
 			disclosuresSet: {
 				include: {
 					disclosures: true
 				}
 			},
+			coveragesSet: {
+				include: {
+					coverages: true
+				}
+			}
+		}
+	});
+	const disclosuresSets = await client.disclosuresSet.findMany({
+		include: {
+			disclosures: true
+		}
+	});
+	const coveragesSets = await client.coveragesSet.findMany({
+		include: {
 			coverages: true
 		}
 	});
 
 	return {
-		ratesheets: ratesheets as RatesheetsWithIncludes[]
+		ratesheets: ratesheets as RatesheetWithIncludes[],
+		disclosuresSets: disclosuresSets as DisclosuresSetWithIncludes[],
+		coveragesSets: coveragesSets as CoveragesSetWithIncludes[]
 	};
 };
 
@@ -31,31 +47,30 @@ export const actions: Actions = {
 	selectRatesheet: async ({ request }) => {
 		const formData = await request.formData();
 
-		const selectedRatesheet = formData.get('selectedRatesheet');
+		const selectedRatesheetId = formData.get('selectedRatesheetId');
 
 		const ratesheet = await client.ratesheet.findUnique({
 			where: {
-				name: selectedRatesheet
+				id: selectedRatesheetId as string
 			},
 			include: {
 				rows: true,
-				options: {
-					include: {
-						package: true,
-						details: true
-					}
-				},
+				options: true,
 				disclosuresSet: {
 					include: {
 						disclosures: true
 					}
 				},
-				coverages: true
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
 			}
 		});
 
 		return {
-			ratesheet: ratesheet as RatesheetsWithIncludes
+			ratesheet: ratesheet as RatesheetWithIncludes
 		};
 	},
 	updateTitle: async ({ request }) => {
@@ -78,23 +93,22 @@ export const actions: Actions = {
 			},
 			include: {
 				rows: true,
-				options: {
-					include: {
-						package: true,
-						details: true
-					}
-				},
+				options: true,
 				disclosuresSet: {
 					include: {
 						disclosures: true
 					}
 				},
-				coverages: true
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
 			}
 		});
 
 		return {
-			ratesheet: updatedRatesheet as RatesheetsWithIncludes
+			ratesheet: updatedRatesheet as RatesheetWithIncludes
 		};
 	},
 	updateRow: async ({ request }) => {
@@ -134,23 +148,22 @@ export const actions: Actions = {
 			},
 			include: {
 				rows: true,
-				options: {
-					include: {
-						package: true,
-						details: true
-					}
-				},
+				options: true,
 				disclosuresSet: {
 					include: {
 						disclosures: true
 					}
 				},
-				coverages: true
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
 			}
 		});
 
 		return {
-			ratesheet: updatedRatesheet as RatesheetsWithIncludes
+			ratesheet: updatedRatesheet as RatesheetWithIncludes
 		};
 	},
 	createRow: async ({ request }) => {
@@ -192,23 +205,22 @@ export const actions: Actions = {
 			},
 			include: {
 				rows: true,
-				options: {
-					include: {
-						package: true,
-						details: true
-					}
-				},
+				options: true,
 				disclosuresSet: {
 					include: {
 						disclosures: true
 					}
 				},
-				coverages: true
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
 			}
 		});
 
 		return {
-			ratesheet: updatedRatesheet as RatesheetsWithIncludes
+			ratesheet: updatedRatesheet as RatesheetWithIncludes
 		};
 	},
 	updateOption: async ({ request }) => {
@@ -225,18 +237,10 @@ export const actions: Actions = {
 				id: id as string
 			},
 			data: {
-				package: {
-					update: {
-						name: optionPackage as string
-					}
-				},
-				details: {
-					update: {
-						termValue: optionTermValue as string,
-						termUnit: optionTermUnit as string,
-						cost: optionCost as string
-					}
-				}
+				packageName: optionPackage as string,
+				termValue: optionTermValue as string,
+				termUnit: optionTermUnit as string,
+				cost: optionCost as string
 			}
 		});
 
@@ -246,23 +250,22 @@ export const actions: Actions = {
 			},
 			include: {
 				rows: true,
-				options: {
-					include: {
-						package: true,
-						details: true
-					}
-				},
+				options: true,
 				disclosuresSet: {
 					include: {
 						disclosures: true
 					}
 				},
-				coverages: true
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
 			}
 		});
 
 		return {
-			ratesheet: updatedRatesheet as RatesheetsWithIncludes
+			ratesheet: updatedRatesheet as RatesheetWithIncludes
 		};
 	},
 	createOption: async ({ request }) => {
@@ -276,18 +279,10 @@ export const actions: Actions = {
 
 		const updatedRow = await client.option.create({
 			data: {
-				package: {
-					create: {
-						name: optionPackage as string
-					}
-				},
-				details: {
-					create: {
-						termValue: optionTermValue as string,
-						termUnit: optionTermUnit as string,
-						cost: optionCost as string
-					}
-				},
+				packageName: optionPackage as string,
+				termValue: optionTermValue as string,
+				termUnit: optionTermUnit as string,
+				cost: optionCost as string,
 				ratesheet: {
 					connect: {
 						id: ratesheetId as string
@@ -302,23 +297,88 @@ export const actions: Actions = {
 			},
 			include: {
 				rows: true,
-				options: {
-					include: {
-						package: true,
-						details: true
-					}
-				},
+				options: true,
 				disclosuresSet: {
 					include: {
 						disclosures: true
 					}
 				},
-				coverages: true
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
 			}
 		});
 
 		return {
-			ratesheet: updatedRatesheet as RatesheetsWithIncludes
+			ratesheet: updatedRatesheet as RatesheetWithIncludes
+		};
+	},
+	selectDisclosuresSet: async ({ request }) => {
+		const formData = await request.formData();
+
+		const selectedRatesheetId = formData.get('selectedRatesheetId');
+		const selectedDisclosuresSetId = formData.get('selectedDisclosuresSetId');
+
+		const updatedRatesheet = await client.ratesheet.update({
+			where: {
+				id: selectedRatesheetId as string
+			},
+			data: {
+				disclosuresSetId: selectedDisclosuresSetId as string
+			},
+			include: {
+				rows: true,
+				options: true,
+				disclosuresSet: {
+					include: {
+						disclosures: true
+					}
+				},
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
+			}
+		});
+
+		return {
+			ratesheet: updatedRatesheet as RatesheetWithIncludes
+		};
+	},
+	selectCoveragesSet: async ({ request }) => {
+		const formData = await request.formData();
+
+		const selectedRatesheetId = formData.get('selectedRatesheetId');
+		const selectedCoveragesSetId = formData.get('selectedCoveragesSetId');
+
+		const updatedRatesheet = await client.ratesheet.update({
+			where: {
+				id: selectedRatesheetId as string
+			},
+			data: {
+				coveragesSetId: selectedCoveragesSetId as string
+			},
+			include: {
+				rows: true,
+				options: true,
+				disclosuresSet: {
+					include: {
+						disclosures: true
+					}
+				},
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
+			}
+		});
+
+		return {
+			ratesheet: updatedRatesheet as RatesheetWithIncludes
 		};
 	}
 } satisfies Actions;

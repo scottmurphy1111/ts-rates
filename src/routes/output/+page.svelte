@@ -2,7 +2,6 @@
 	import JustDrive from '$lib/assets/icons/just-drive.svelte';
 	import TruckSuiteLogo from '$lib/assets/images/ts-logo-dark.svg';
 
-	import { writable } from 'svelte/store';
 	import type { PageData } from './$types';
 	import type { Output } from '$lib/types/types';
 	export let data: PageData;
@@ -11,8 +10,6 @@
 	const vscData = rawData as Record<string, any>;
 
 	const output: Output = data?.output ?? { cardTypes: [], markup: '' };
-
-	$: console.log('output', output);
 </script>
 
 {#each output?.cardTypes as cardType}
@@ -32,9 +29,6 @@
 				<span class="font-semibold text-xl">
 					{vscData[cardType]?.header?.title}
 				</span>
-				<!-- <span class="text-base">
-					{vscData[cardType]?.header?.subtitle}
-				</span> -->
 			</div>
 		</div>
 		<div class="flex w-full p-4">
@@ -83,8 +77,6 @@
 		</div>
 		<h1 class="text-4xl font-bold text-center">Output</h1>
 		<p class="text-center">This is the output page</p>
-		<!-- <p>{data.cardTypes}</p>
-    <p>{data.markup}</p> -->
 		<JustDrive />
 	</div>
 {/each}

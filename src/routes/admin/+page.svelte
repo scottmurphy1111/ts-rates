@@ -4,9 +4,7 @@
 			><header>
 				<h3 class="flex gap-2 h3 items-center">Ratesheets</h3>
 			</header>
-			<section>
-				<!-- <p>Ratesheets</p> -->
-			</section>
+			<section></section>
 			<footer>
 				<button class="btn variant-filled-primary">Launch</button>
 			</footer></a
@@ -15,9 +13,7 @@
 			><header>
 				<h3 class="flex gap-2 h3 items-center">Disclosures</h3>
 			</header>
-			<section>
-				<!-- <p>Ratesheets</p> -->
-			</section>
+			<section></section>
 			<footer>
 				<button class="btn variant-filled-primary">Launch</button>
 			</footer></a
@@ -26,9 +22,7 @@
 			><header>
 				<h3 class="flex gap-2 h3 items-center">Coverages</h3>
 			</header>
-			<section>
-				<!-- <p>Ratesheets</p> -->
-			</section>
+			<section></section>
 			<footer>
 				<button class="btn variant-filled-primary">Launch</button>
 			</footer></a

@@ -33,89 +33,29 @@ async function main() {
 						costOlderHighMiles: '7000',
 						deductible: '350',
 						aggregateLimit: '30000'
-					},
-					{
-						termValue: '12',
-						termUnit: 'months',
-						mileageValue: '125',
-						costNewerLowMiles: '4000',
-						costNewerHighMiles: '5000',
-						costOlderLowMiles: '6000',
-						costOlderHighMiles: '7000',
-						deductible: '350',
-						aggregateLimit: '30000'
-					},
-					{
-						termValue: '24',
-						termUnit: 'months',
-						mileageValue: '250',
-						costNewerLowMiles: '4000',
-						costNewerHighMiles: '5000',
-						costOlderLowMiles: '6000',
-						costOlderHighMiles: '7000',
-						deductible: '350',
-						aggregateLimit: '30000'
-					},
-					{
-						termValue: '12',
-						termUnit: 'months',
-						mileageValue: '125',
-						costNewerLowMiles: '4000',
-						costNewerHighMiles: '5000',
-						costOlderLowMiles: '6000',
-						costOlderHighMiles: '7000',
-						deductible: '350',
-						aggregateLimit: '30000'
-					},
-					{
-						termValue: '24',
-						termUnit: 'months',
-						mileageValue: '250',
-						costNewerLowMiles: '4000',
-						costNewerHighMiles: '5000',
-						costOlderLowMiles: '6000',
-						costOlderHighMiles: '7000',
-						deductible: '350',
-						aggregateLimit: '30000'
 					}
 				]
 			},
 			options: {
 				create: [
 					{
-						package: {
-							create: {
-								name: 'Trans&Diff'
-							}
-						},
-						details: {
-							create: {
-								termValue: '12',
-								termUnit: 'months',
-								cost: '475'
-							}
-						}
+						packageName: 'Trans&Diff',
+						termValue: '12',
+						termUnit: 'months',
+						cost: '475'
 					},
 					{
-						package: {
-							create: {
-								name: 'Trans&Diff'
-							}
-						},
-						details: {
-							create: {
-								termValue: '24',
-								termUnit: 'months',
-								cost: '575'
-							}
-						}
+						packageName: 'HVAC',
+						termValue: '12',
+						termUnit: 'months',
+						cost: '475'
 					}
 				]
 			},
 			disclosuresSet: {
 				create: {
 					id: '1',
-					title: 'Class 8 basic',
+					name: 'Class 8 basic',
 
 					disclosures: {
 						create: [
@@ -138,13 +78,31 @@ async function main() {
 					}
 				}
 			},
-			coverages: {
-				create: [
-					{
-						title: 'Coverage',
-						description: 'This is the coverage disclosure'
+			coveragesSet: {
+				create: {
+					id: '1',
+					name: 'Class 8 coverages',
+
+					coverages: {
+						create: [
+							{
+								title: 'Starting',
+								description: 'This is the starting coverage',
+								order: '0'
+							},
+							{
+								title: 'Engine',
+								description: 'This is the engine coverage',
+								order: '1'
+							},
+							{
+								title: 'Aftertreatment',
+								description: 'This is the aftertreatment coverage',
+								order: '2'
+							}
+						]
 					}
-				]
+				}
 			}
 		}
 	});
@@ -173,18 +131,10 @@ async function main() {
 			options: {
 				create: [
 					{
-						package: {
-							create: {
-								name: 'Trans&Diff'
-							}
-						},
-						details: {
-							create: {
-								termValue: '12',
-								termUnit: 'months',
-								cost: '475'
-							}
-						}
+						packageName: 'Trans&Diff',
+						termValue: '12',
+						termUnit: 'months',
+						cost: '475'
 					}
 				]
 			},
@@ -193,48 +143,19 @@ async function main() {
 					id: '1'
 				}
 			},
-			coverages: {
-				create: [
-					{
-						title: 'Coverage',
-						description: 'This is the coverage disclosure'
-					}
-				]
+			coveragesSet: {
+				connect: {
+					id: '1'
+				}
 			}
 		}
 	});
 	console.log(`Created RateSheet with id: ${ratesheet2.name}`);
 
-	const optionPkg1 = await prisma.optionPackage.create({
-		data: {
-			name: 'Trans&Diff'
-		}
-	});
-	const optionPkg2 = await prisma.optionPackage.create({
-		data: {
-			name: 'HVAC'
-		}
-	});
-	const optionPkg3 = await prisma.optionPackage.create({
-		data: {
-			name: 'APU'
-		}
-	});
-	const optionPkg4 = await prisma.optionPackage.create({
-		data: {
-			name: 'Refrigeration'
-		}
-	});
-	const optionPkg5 = await prisma.optionPackage.create({
-		data: {
-			name: 'Future Option'
-		}
-	});
-
 	const disclosuresSet = await prisma.disclosuresSet.create({
 		data: {
 			id: '2',
-			title: 'Class 8 Advanced',
+			name: 'Class 8 Advanced',
 
 			disclosures: {
 				create: [
@@ -257,6 +178,32 @@ async function main() {
 			}
 		}
 	});
+	const coveragesSet = await prisma.coveragesSet.create({
+		data: {
+			id: '2',
+			name: 'Class 8 Advanced coverages',
+
+			coverages: {
+				create: [
+					{
+						title: 'Engine2',
+						description: 'This is the engine coverage',
+						order: '0'
+					},
+					{
+						title: 'Trans&Diff2',
+						description: 'This is the trans-diff coverage',
+						order: '1'
+					},
+					{
+						title: 'Turbo2',
+						description: 'This is an turbo coverage',
+						order: '2'
+					}
+				]
+			}
+		}
+	});
 
 	// const disclosure1 = await prisma.disclosure.create({
 	// 	data: {
@@ -271,10 +218,8 @@ async function main() {
 	// 	}
 	// });
 
-	console.log(
-		`Created the Following Option Packages: ${optionPkg1.name}, ${optionPkg2.name}, ${optionPkg3.name}, ${optionPkg4.name}, ${optionPkg5.name}`
-	);
-	console.log(`Created the Following Disclosures Set: ${disclosuresSet.title}`);
+	console.log(`Created the Following Disclosures Set: ${disclosuresSet.name}`);
+	console.log(`Created the Following Coverages Set: ${coveragesSet.name}`);
 	console.log(`Seeding finished.`);
 }
 
