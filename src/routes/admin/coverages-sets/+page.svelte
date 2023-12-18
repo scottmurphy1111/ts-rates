@@ -6,21 +6,26 @@
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { invalidate } from '$app/navigation';
 	import { flip } from 'svelte/animate';
-	import { onMount } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import type { CoveragesSetWithIncludes } from '$lib/types/types';
+	import { writable, type Writable } from 'svelte/store';
 
 	export let data: PageData;
-	export let form: ActionData;
+	// export let form: ActionData;
 
-	let selectForm: HTMLFormElement;
+	// let selectForm: HTMLFormElement;
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
-	$: ({ coveragesSets } = data);
-	$: coveragesSet = (form?.coveragesSet as CoveragesSetWithIncludes) ?? null;
+	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
-	$: selectedCoverageSet = coveragesSet?.id ?? '';
+	const creatingCoveragesSetStore = writable(false);
+
+	$: ({ coveragesSets } = data);
+	let coveragesSet: CoveragesSetWithIncludes | null = null;
+
+	$: selectedCoverageSetId = coveragesSet?.id ?? '';
 
 	let orderedCoverages: any[] = [];
 
@@ -86,25 +91,28 @@
 		orderedCoverages = [...orderedCoverages, newCoverage];
 	};
 
-	const deleteCoverage = (id: string, coveragesSetId: string) => {
-		if (id === undefined) {
+	const deleteCoveragesSet = () => {
+		pendingStore.set(true);
+		if (coveragesSet?.id === undefined) {
+			pendingStore.set(false);
 			return;
 		}
 		new Promise<boolean>((resolve) => {
 			modalStore.trigger({
 				type: 'confirm',
-				// Data
 				title: 'Confirm Delete',
 				body: 'Are you sure you wish to delete this coverage (this is irreversible)?',
-				// TRUE if confirm pressed, FALSE if cancel pressed
 				response: (r: boolean) => {
 					resolve(r);
 				}
 			});
 		}).then(async (r) => {
-			if (!r) return;
+			if (!r) {
+				pendingStore.set(false);
+				return;
+			}
 
-			await fetch(`/api/coverages?id=${id}&coveragesSetId=${coveragesSetId}`, {
+			await fetch(`/api/coveragesSets?id=${coveragesSet?.id}`, {
 				method: 'DELETE'
 			})
 				.then(async (res) => {
@@ -114,10 +122,52 @@
 						orderedCoverages =
 							coveragesSet?.coverages.sort((a, b) => Number(a.order) - Number(b.order)) ?? [];
 						toastStore.trigger({ message: '👍 Coverage deleted successfully' });
+						pendingStore.set(false);
 					}
 				})
 				.catch((err) => {
 					toastStore.trigger({ message: `❗️ Error deleting coverage ${err}` });
+					pendingStore.set(false);
+				});
+		});
+	};
+
+	const deleteCoverage = (id: string) => {
+		pendingStore.set(true);
+		if (id === undefined) {
+			return;
+		}
+		new Promise<boolean>((resolve) => {
+			modalStore.trigger({
+				type: 'confirm',
+				title: 'Confirm Delete',
+				body: 'Are you sure you wish to delete this coverage (this is irreversible)?',
+				response: (r: boolean) => {
+					resolve(r);
+				}
+			});
+		}).then(async (r) => {
+			if (!r) {
+				pendingStore.set(false);
+				return;
+			}
+
+			await fetch(`/api/coverages?id=${id}`, {
+				method: 'DELETE'
+			})
+				.then(async (res) => {
+					if (res.ok) {
+						invalidate('form:coveragesSet');
+						coveragesSet = (await res.json()) as CoveragesSetWithIncludes;
+						orderedCoverages =
+							coveragesSet?.coverages.sort((a, b) => Number(a.order) - Number(b.order)) ?? [];
+						toastStore.trigger({ message: '👍 Coverage deleted successfully' });
+						pendingStore.set(false);
+					}
+				})
+				.catch((err) => {
+					toastStore.trigger({ message: `❗️ Error deleting coverage ${err}` });
+					pendingStore.set(false);
 				});
 		});
 	};
@@ -132,8 +182,33 @@
 		coveragesSet = emptyCoveragesSet;
 	};
 
-	const handleSubmit = async (e: Event) => {
+	const handleSelect = async (e: Event) => {
+		const coveragesSetId = (e.target as HTMLSelectElement).value;
 		e.preventDefault();
+
+		pendingStore.set(true);
+		creatingCoveragesSetStore.set(false);
+
+		await fetch(`/api/coveragesSets?id=${coveragesSetId}`)
+			.then(async (res) => {
+				if (res.ok) {
+					coveragesSet = (await res.json()) as CoveragesSetWithIncludes;
+					orderedCoverages =
+						coveragesSet?.coverages.sort((a, b) => Number(a.order) - Number(b.order)) ?? [];
+					invalidate('data:coveragesSets');
+					pendingStore.set(false);
+				}
+			})
+			.catch((err) => {
+				toastStore.trigger({ message: `❗️ Error fetching Coverages Set ${err}` });
+				pendingStore.set(false);
+			});
+	};
+
+	const handleSave = async (e: Event) => {
+		e.preventDefault();
+
+		pendingStore.set(true);
 		const formData = new FormData(e.target as HTMLFormElement);
 
 		await fetch('/api/coverages', {
@@ -147,15 +222,56 @@
 						coveragesSet?.coverages.sort((a, b) => Number(a.order) - Number(b.order)) ?? [];
 					invalidate('data:coveragesSets');
 					toastStore.trigger({ message: '👍 Coverage Set updated successfully' });
+					pendingStore.set(false);
+					creatingCoveragesSetStore.set(false);
 				}
 			})
 			.catch((err) => {
 				toastStore.trigger({ message: `❗️ Error updating Coverages Set ${err}` });
+				pendingStore.set(false);
+				creatingCoveragesSetStore.set(false);
 			});
+	};
+
+	const clearCoveragesSet = () => {
+		coveragesSet = null;
+		orderedCoverages = [];
 	};
 </script>
 
-<form
+{#if !coveragesSet}
+	<div class="flex px-8 pt-8 mb-4">
+		<button
+			type="button"
+			class="btn bg-gradient-to-br variant-gradient-primary-secondary"
+			on:click={createEmptyCoveragesSet}>Create New Coverages Set</button
+		>
+	</div>
+	<div class="flex gap-2 px-8 mb-4">
+		<span>- OR -</span>
+	</div>
+	<div class="flex gap-2 px-8">
+		<div class="flex flex-col w-full gap-2">
+			<select
+				class="select"
+				name="selectedCoveragesSetId"
+				on:change={handleSelect}
+				bind:value={selectedCoverageSetId}
+			>
+				{#if coveragesSets}
+					<option value disabled>Select an Existing Coverages Set</option>
+					{#each coveragesSets as set}
+						<option value={set.id} selected={set.id === selectedCoverageSetId}>
+							{set.name}
+						</option>
+					{/each}
+				{/if}
+			</select>
+		</div>
+	</div>
+{/if}
+
+<!-- <form
 	method="POST"
 	action="?/selectCoveragesSet"
 	bind:this={selectForm}
@@ -190,36 +306,48 @@
 			</select>
 		</div>
 	</div>
-</form>
-{#if !coveragesSet}
+</form> -->
+<!-- {#if !coveragesSet}
 	<div class="flex px-8">
-		<button
-			type="button"
-			class="btn variant-filled-primary dark:variant-ghost-primary"
-			on:click={createEmptyCoveragesSet}>Create New Coverages Set</button
-		>
+		
 	</div>
-{/if}
-<div class="flex flex-col gap-4 p-8">
+{/if} -->
+<div class="flex flex-col gap-4 px-8">
 	{#if coveragesSet}
-		<form class="flex flex-col gap-3" on:submit|preventDefault={handleSubmit} method="POST">
+		<form class="flex flex-col gap-3" on:submit|preventDefault={handleSave} method="POST">
 			<input type="hidden" name="coveragesSetId" value={coveragesSet.id} />
 			<div
 				class="flex gap-2 justify-between sticky top-0 bg-surface-50-900-token z-10 px-8 py-4 -mx-8 border-b border-surface-100-800-token"
 			>
-				<h2>{coveragesSet.name}</h2>
-				<button type="submit" class="btn variant-filled-primary dark:variant-ghost-primary">
-					Save
-				</button>
+				<div class="inline-flex gap-4">
+					<h2>{coveragesSet.name}</h2>
+					{#if coveragesSet?.id !== 'new'}
+						<button
+							type="button"
+							class="btn bg-gradient-to-br variant-filled-error"
+							on:click={deleteCoveragesSet}>Delete</button
+						>
+					{/if}
+				</div>
+				<div class="inline-flex gap-2">
+					<button type="submit" class="btn bg-gradient-to-br variant-gradient-primary-secondary">
+						Save
+					</button>
+					<button
+						type="button"
+						on:click={clearCoveragesSet}
+						class="btn bg-gradient-to-br variant-filled-tertiary"
+					>
+						Cancel
+					</button>
+				</div>
 			</div>
 			<label for="title" class="label mb-8"
 				>Name
 				<input class="input" name="name" value={coveragesSet.name} />
 			</label>
 
-			{#if !coveragesSet?.coverages}
-				...llooiadnign
-			{:else}
+			{#if coveragesSet?.coverages}
 				{#each orderedCoverages as coverage (coverage.id)}
 					<div
 						class="card !bg-surface-100-800-token p-4 flex items-start gap-2"
@@ -266,7 +394,7 @@
 							</button>
 							<button
 								type="button"
-								on:click={() => deleteCoverage(coverage.id, coveragesSet.id)}
+								on:click={() => deleteCoverage(coverage.id)}
 								class="btn-icon text-error-500 w-6 h-6"
 								><svelte:component this={DeleteIcon} /></button
 							>
@@ -277,7 +405,7 @@
 		</form>
 		<div>
 			<button
-				class="btn variant-filled-primary dark:variant-ghost-primary"
+				class="btn bg-gradient-to-br variant-gradient-primary-secondary"
 				on:click={addNewCoverage}
 				><span class="text-2xl leading-none mr-2">+</span> Add Coverage</button
 			>

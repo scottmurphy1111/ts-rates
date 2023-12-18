@@ -4,11 +4,14 @@ CREATE TABLE `Ratesheet` (
     `name` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `subtitle` VARCHAR(191) NOT NULL,
-    `disclosuresSetId` VARCHAR(191) NOT NULL,
-    `coveragesSetId` VARCHAR(191) NOT NULL,
+    `lowMileageCutoff` VARCHAR(191) NULL,
+    `disclosuresSetId` VARCHAR(191) NULL,
+    `coveragesSetId` VARCHAR(191) NULL,
 
     UNIQUE INDEX `Ratesheet_name_key`(`name`),
     INDEX `Ratesheet_name_idx`(`name`),
+    INDEX `Ratesheet_disclosuresSetId_idx`(`disclosuresSetId`),
+    INDEX `Ratesheet_coveragesSetId_idx`(`coveragesSetId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -26,6 +29,7 @@ CREATE TABLE `Row` (
     `aggregateLimit` VARCHAR(191) NOT NULL,
     `ratesheetId` VARCHAR(191) NOT NULL,
 
+    INDEX `Row_ratesheetId_idx`(`ratesheetId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -38,6 +42,7 @@ CREATE TABLE `Option` (
     `cost` VARCHAR(191) NOT NULL,
     `ratesheetId` VARCHAR(191) NOT NULL,
 
+    INDEX `Option_ratesheetId_idx`(`ratesheetId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -57,6 +62,7 @@ CREATE TABLE `Disclosure` (
     `order` VARCHAR(191) NOT NULL,
     `disclosuresSetId` VARCHAR(191) NOT NULL,
 
+    INDEX `Disclosure_disclosuresSetId_idx`(`disclosuresSetId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -76,5 +82,6 @@ CREATE TABLE `Coverage` (
     `order` VARCHAR(191) NOT NULL,
     `coveragesSetId` VARCHAR(191) NOT NULL,
 
+    INDEX `Coverage_coveragesSetId_idx`(`coveragesSetId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

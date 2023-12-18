@@ -6,25 +6,25 @@
 			</header>
 			<section></section>
 			<footer>
-				<button class="btn variant-filled-primary">Launch</button>
+				<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Launch</button>
 			</footer></a
 		>
-		<a class="card card-hover shadow-md p-8 flex flex-col gap-4 w-96" href="/admin/disclosures"
+		<a class="card card-hover shadow-md p-8 flex flex-col gap-4 w-96" href="/admin/disclosures-sets"
 			><header>
-				<h3 class="flex gap-2 h3 items-center">Disclosures</h3>
+				<h3 class="flex gap-2 h3 items-center">Disclosures Sets</h3>
 			</header>
 			<section></section>
 			<footer>
-				<button class="btn variant-filled-primary">Launch</button>
+				<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Launch</button>
 			</footer></a
 		>
-		<a class="card card-hover shadow-md p-8 flex flex-col gap-4 w-96" href="/admin/coverages"
+		<a class="card card-hover shadow-md p-8 flex flex-col gap-4 w-96" href="/admin/coverages-sets"
 			><header>
-				<h3 class="flex gap-2 h3 items-center">Coverages</h3>
+				<h3 class="flex gap-2 h3 items-center">Coverages Sets</h3>
 			</header>
 			<section></section>
 			<footer>
-				<button class="btn variant-filled-primary">Launch</button>
+				<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Launch</button>
 			</footer></a
 		>
 	</div>

@@ -2,6 +2,31 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import path from 'path';
 import { writeFileSync } from 'fs';
+import { client } from '$lib/server/prisma';
+import type { RatesheetWithIncludes } from '$lib/types/types';
+
+export const load = async () => {
+	const ratesheets = await client.ratesheet.findMany({
+		include: {
+			rows: true,
+			options: true,
+			disclosuresSet: {
+				include: {
+					disclosures: true
+				}
+			},
+			coveragesSet: {
+				include: {
+					coverages: true
+				}
+			}
+		}
+	});
+
+	return {
+		ratesheets: ratesheets as RatesheetWithIncludes[]
+	};
+};
 
 export const actions = {
 	default: async ({ request, cookies }) => {

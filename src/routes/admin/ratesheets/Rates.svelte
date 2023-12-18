@@ -9,9 +9,12 @@
 	import type { Writable } from 'svelte/store';
 
 	export let ratesheet: RatesheetWithIncludes | null = null;
+	export let lowMileageCutoff: string = '600';
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
+
+	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
 	const creatingRatesheetStore = getContext<Writable<Boolean>>('creatingRatesheetStore');
 	const emptyRatesRowStore = getContext<Writable<Row | undefined>>('emptyRatesRowStore');
@@ -20,14 +23,14 @@
 		return crypto.randomUUID();
 	};
 
-	const rateColHeaders = [
+	$: rateColHeaders = [
 		'Term',
 		'Units',
 		'Mileage',
-		`${new Date().getFullYear()} - ${new Date().getFullYear() - 4} <br /> 0-600k`,
-		`${new Date().getFullYear()} - ${new Date().getFullYear() - 4} <br /> 600k+`,
-		`${new Date().getFullYear() - 5} &amp; older <br /> 0-600k`,
-		`${new Date().getFullYear() - 5} &amp; older <br /> 600k+`,
+		`${new Date().getFullYear()} - ${new Date().getFullYear() - 4} <br /> 0-${lowMileageCutoff}k`,
+		`${new Date().getFullYear()} - ${new Date().getFullYear() - 4} <br /> ${lowMileageCutoff}k+`,
+		`${new Date().getFullYear() - 5} &amp; older <br /> 0-${lowMileageCutoff}k`,
+		`${new Date().getFullYear() - 5} &amp; older <br /> ${lowMileageCutoff}k+`,
 		'Deductible',
 		'Aggregate',
 		''
@@ -57,8 +60,10 @@
 	};
 
 	const deleteRow = (id?: string, ratesheetId?: string) => {
+		pendingStore.set(true);
 		if (id === undefined) {
 			emptyRatesRowStore.set(undefined);
+			pendingStore.set(false);
 			return;
 		}
 		new Promise<boolean>((resolve) => {
@@ -72,7 +77,10 @@
 				}
 			});
 		}).then(async (r) => {
-			if (!r) return;
+			if (!r) {
+				pendingStore.set(false);
+				return;
+			}
 
 			await fetch(`/api/ratesheets/rows?id=${id}&ratesheetId=${ratesheetId}`, {
 				method: 'DELETE'
@@ -82,10 +90,12 @@
 						toastStore.trigger({ message: '👍 Row deleted successfully' });
 						invalidate('form:ratesheet');
 						ratesheet = (await res.json()) as RatesheetWithIncludes;
+						pendingStore.set(false);
 					}
 				})
 				.catch((err) => {
 					toastStore.trigger({ message: `❗️ Error deleting row ${err}` });
+					pendingStore.set(false);
 				});
 		});
 	};
@@ -182,11 +192,11 @@
 		{#if $creatingRatesheetStore}
 			Save Ratesheet First
 		{:else if addingNew}
-			<button class="btn variant-filled-primary dark:variant-ghost-primary">Save Rates</button>
+			<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Save Rates</button>
 		{:else}
 			<button
 				type="button"
-				class="btn variant-filled-primary dark:variant-ghost-primary"
+				class="btn bg-gradient-to-br variant-gradient-primary-secondary"
 				on:click={addNewRow}><span class="text-2xl leading-none mr-2">+</span> Add Rate</button
 			>
 		{/if}

@@ -8,6 +8,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const title = formData.get('title');
 	const formattedName = title?.toString().toLowerCase().replace(/\s/g, '_');
 	const subtitle = formData.get('subtitle');
+	const lowMileageCutoff = formData.get('lowMileageCutoff');
 	const rowIds = formData.getAll('rowId');
 	const termValues = formData.getAll('termValue');
 	const termUnits = formData.getAll('termUnit');
@@ -73,31 +74,13 @@ export const POST: RequestHandler = async ({ request }) => {
 			name: formattedName as string,
 			title: title as string,
 			subtitle: subtitle as string,
-			disclosuresSet: {
-				connect: {
-					id: selectedDisclosuresSetId as string
-				}
-			},
-			coveragesSet: {
-				connect: {
-					id: selectedCoveragesSetId as string
-				}
-			}
+			lowMileageCutoff: lowMileageCutoff as string
 		},
 		create: {
 			name: formattedName as string,
 			title: title as string,
 			subtitle: subtitle as string,
-			disclosuresSet: {
-				connect: {
-					id: selectedDisclosuresSetId as string
-				}
-			},
-			coveragesSet: {
-				connect: {
-					id: selectedCoveragesSetId as string
-				}
-			},
+			lowMileageCutoff: lowMileageCutoff as string,
 			rows: {
 				create: formattedRows.map((row) => {
 					const rowId = Object.keys(row)[0];
@@ -224,6 +207,36 @@ export const POST: RequestHandler = async ({ request }) => {
 		});
 	});
 
+	if (selectedDisclosuresSetId) {
+		await client.disclosuresSet.update({
+			where: {
+				id: selectedDisclosuresSetId as string
+			},
+			data: {
+				ratesheet: {
+					connect: {
+						id: ratesheetId as string
+					}
+				}
+			}
+		});
+	}
+
+	if (selectedCoveragesSetId) {
+		await client.coveragesSet.update({
+			where: {
+				id: selectedCoveragesSetId as string
+			},
+			data: {
+				ratesheet: {
+					connect: {
+						id: ratesheetId as string
+					}
+				}
+			}
+		});
+	}
+
 	await client.$transaction(updateRows);
 	await client.$transaction(updateOptions);
 
@@ -248,30 +261,4 @@ export const POST: RequestHandler = async ({ request }) => {
 	});
 
 	return json(updatedRatesheet);
-};
-
-export const DELETE: RequestHandler = async ({ url }) => {
-	const id = url.searchParams.get('id');
-
-	const deleteRows = client.row.deleteMany({
-		where: {
-			ratesheetId: id as string
-		}
-	});
-
-	const deleteOptions = client.option.deleteMany({
-		where: {
-			ratesheetId: id as string
-		}
-	});
-
-	const deleteRatesheet = client.ratesheet.delete({
-		where: {
-			id: id as string
-		}
-	});
-
-	await client.$transaction([deleteRows, deleteOptions, deleteRatesheet]);
-
-	return json({ message: '👍 Ratesheet deleted successfully' });
 };

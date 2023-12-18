@@ -13,18 +13,21 @@ generator client {
 }
 
 model Ratesheet {
-  id               String         @id @default(uuid())
-  name             String         @unique
+  id               String          @id @default(uuid())
+  name             String          @unique
   title            String
   subtitle         String
+  lowMileageCutoff String?
   rows             Row[]
   options          Option[]
-  disclosuresSetId String
-  disclosuresSet   DisclosuresSet @relation(fields: [disclosuresSetId], references: [id])
-  coveragesSetId   String
-  coveragesSet     CoveragesSet   @relation(fields: [coveragesSetId], references: [id])
+  disclosuresSetId String?
+  disclosuresSet   DisclosuresSet? @relation(fields: [disclosuresSetId], references: [id])
+  coveragesSetId   String?
+  coveragesSet     CoveragesSet?   @relation(fields: [coveragesSetId], references: [id])
 
   @@index(name)
+  @@index([disclosuresSetId])
+  @@index([coveragesSetId])
 }
 
 model Row {
@@ -40,6 +43,8 @@ model Row {
   aggregateLimit     String
   ratesheetId        String
   ratesheet          Ratesheet @relation(fields: [ratesheetId], references: [id])
+
+  @@index([ratesheetId])
 }
 
 model Option {
@@ -50,6 +55,8 @@ model Option {
   cost        String
   ratesheetId String
   ratesheet   Ratesheet @relation(fields: [ratesheetId], references: [id])
+
+  @@index([ratesheetId])
 }
 
 model DisclosuresSet {
@@ -66,6 +73,8 @@ model Disclosure {
   order            String
   disclosuresSetId String
   disclosuresSet   DisclosuresSet @relation(fields: [disclosuresSetId], references: [id])
+
+  @@index([disclosuresSetId])
 }
 
 model CoveragesSet {
@@ -82,4 +91,6 @@ model Coverage {
   order          String
   coveragesSetId String
   coveragesSet   CoveragesSet @relation(fields: [coveragesSetId], references: [id])
+
+  @@index([coveragesSetId])
 }

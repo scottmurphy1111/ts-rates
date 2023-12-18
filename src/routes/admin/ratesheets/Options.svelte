@@ -13,6 +13,8 @@
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
+	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
+
 	const creatingRatesheetStore = getContext<Writable<Boolean>>('creatingRatesheetStore');
 	const emptyOptionsRowStore = getContext<Writable<Option | undefined>>('emptyOptionsRowStore');
 
@@ -41,8 +43,10 @@
 	};
 
 	const deleteRow = (id?: string, ratesheetId?: string) => {
+		pendingStore.set(true);
 		if (id === undefined) {
 			emptyOptionsRowStore.set(undefined);
+			pendingStore.set(false);
 			return;
 		}
 		new Promise<boolean>((resolve) => {
@@ -56,7 +60,10 @@
 				}
 			});
 		}).then(async (r) => {
-			if (!r) return;
+			if (!r) {
+				pendingStore.set(false);
+				return;
+			}
 
 			await fetch(`/api/ratesheets/options?id=${id}&ratesheetId=${ratesheetId}`, {
 				method: 'DELETE'
@@ -66,10 +73,12 @@
 						toastStore.trigger({ message: '👍 Option deleted successfully' });
 						invalidate('form:ratesheet');
 						ratesheet = (await res.json()) as RatesheetWithIncludes;
+						pendingStore.set(false);
 					}
 				})
 				.catch((err) => {
 					toastStore.trigger({ message: `❗️ Error deleting option ${err}` });
+					pendingStore.set(false);
 				});
 		});
 	};
@@ -137,11 +146,11 @@
 		{#if $creatingRatesheetStore}
 			Save Ratesheet First
 		{:else if addingNew}
-			<button class="btn variant-filled-primary dark:variant-ghost-primary">Save Options</button>
+			<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Save Options</button>
 		{:else}
 			<button
 				type="button"
-				class="btn variant-filled-primary dark:variant-ghost-primary"
+				class="btn bg-gradient-to-br variant-gradient-primary-secondary"
 				on:click={addNewOption}><span class="text-2xl leading-none mr-2">+</span> Add Option</button
 			>
 		{/if}

@@ -2,17 +2,30 @@
 	import logo from '$lib/assets/images/ts-logo.svg';
 	import JustDriveIcon from '$lib/assets/icons/just-drive.svelte';
 
-	import { writable } from 'svelte/store';
+	import { writable, type Writable } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import type { PageData } from './$types';
+	import { localStorageStore } from '@skeletonlabs/skeleton';
 
-	const cardTypes = writable<string[]>([]);
+	export let data: PageData;
+
+	const { ratesheets } = data;
+
+	const selectedRatesheetId = writable(ratesheets?.[0]?.id ?? '');
 	const markup = writable(1000);
 	const customLogo = writable(null);
+
+	const ratesheetStorage: Writable<string> = localStorageStore('ratesheetId', $selectedRatesheetId);
+
+	$: console.log($ratesheetStorage);
+
+	const cardTypes = writable<string[]>([]);
 
 	$: splitTypes = $cardTypes?.toString();
 
 	function sendToOutput() {
+		ratesheetStorage.set($selectedRatesheetId);
 		const data = {
 			cardTypes: splitTypes,
 			markup: $markup.toString(),
@@ -72,57 +85,50 @@
 		<a class="flex" href="/">
 			<img class="block w-full" src={logo} alt="ts-logo" />
 		</a>
-		<h2 class="text-xl text-center p-0">Rate Card Generator</h2>
+		<h2 class="text-xl text-center p-0">Ratesheet Generator</h2>
 	</div>
-	<form method="post" use:enhance enctype="multipart/form-data">
+	<!-- <form method="post" use:enhance enctype="multipart/form-data"> -->
+	<div class="flex flex-col gap-8">
+		<label class="label" for="selectedRatesheetId">
+			Make Selection
+			<select required class="select" bind:value={$selectedRatesheetId} name="selectedRatesheetId">
+				<option value disabled>Pick a Ratesheet</option>
+				{#each ratesheets as ratesheet}
+					<option value={ratesheet.id}>{ratesheet.title}</option>
+				{/each}
+			</select>
+		</label>
+		<label class="label" for="markup"
+			>Markup
+			<input class="input" bind:value={$markup} name="markup" required />
+		</label>
 		<div class="flex flex-col gap-8">
-			<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="cardTypes">
-				Select Product(s)
-				<select
-					required
-					multiple
-					class="border border-ts-gray-md rounded py-3 px-4 h-48"
-					bind:value={$cardTypes}
-					name="cardTypes"
-				>
-					{#each Object.keys(products) as product (product)}
-						<option value={product}>{products[product]}</option>
-					{/each}
-				</select></label
-			>
-			<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="markup"
-				>Markup
-				<input
-					type="number"
-					class="border border-ts-gray-md rounded py-3 px-4"
-					bind:value={$markup}
-					name="markup"
-					required
-				/>
-			</label>
-			<div class="flex flex-col gap-8">
-				<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="cardTypes">
+			<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base" for="cardTypes">
 					Select Dealership
 					<select required class="select" value={'dealer'} name="cardTypes">
 						<option value="1">Dealership 1</option>
 						<option value="2">Dealership 2</option>
 						<option value="3">Dealership 3</option>
-						<!-- {#each Object.keys(products) as product (product)}
+						{#each Object.keys(products) as product (product)}
               <option value={product}>{products[product]}</option>
-            {/each} -->
-					</select></label
-				>
-				<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
-					>Upload a Logo (Optional)
-					<input
-						type="file"
-						name="customLogo"
-						accept="image/png, image/jpeg"
-						bind:value={$customLogo}
-					/>
-				</label>
-				<button class="btn variant-filled-primary">Generate</button>
-				<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base"
+            {/each} 
+					 </select></label 
+				> -->
+			<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
+				>Upload a Logo (Optional)
+				<input
+					type="file"
+					name="customLogo"
+					accept="image/png, image/jpeg"
+					bind:value={$customLogo}
+				/>
+			</label>
+			<button
+				class="btn variant-filled-primary"
+				type="button"
+				on:click|preventDefault={sendToOutput}>Generate</button
+			>
+			<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base"
 				>Term Length
 				<select class="border border-ts-gray-md rounded py-3 px-4" bind:value={$term}>
 					{#each termOptions as option}
@@ -130,7 +136,7 @@
 					{/each}
 				</select>
 			</label> -->
-				<!-- <div>
+			<!-- <div>
 				<span class="font-medium mb-2 flex">Your estimated weekly payment amount is:</span>
 				<div class="w-full flex flex-col font-semibold mb-4 text-center">
 					<span class="w-full inline-flex text-4xl justify-center">
@@ -143,9 +149,9 @@
 					subject to credit approval and may differ from the above calculation.</span
 				>
 			</div> -->
-			</div>
 		</div>
-	</form>
+	</div>
+	<!-- </form> -->
 	<div class="w-full mt-8 flex justify-center items-center">
 		<div class="w-1/3">
 			<JustDriveIcon />

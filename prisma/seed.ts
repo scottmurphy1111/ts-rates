@@ -10,6 +10,7 @@ async function main() {
 			name: 'class_8',
 			title: 'Class 8',
 			subtitle: 'Class 8 trucks are the largest on-road trucks',
+			lowMileageCutoff: '600',
 			rows: {
 				create: [
 					{
@@ -113,6 +114,7 @@ async function main() {
 			name: 'class_8_FTL',
 			title: 'Class 8 Freightliner',
 			subtitle: 'Freightliner Exclusive',
+			lowMileageCutoff: '125',
 			rows: {
 				create: [
 					{
