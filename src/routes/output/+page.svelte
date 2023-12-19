@@ -1,14 +1,15 @@
 <script lang="ts">
-	import JustDrive from '$lib/assets/icons/just-drive.svelte';
+	// import JustDrive from '$lib/assets/icons/just-drive.svelte';
 	import TsLogoDark from '$lib/assets/images/ts-logo-dark.svg';
-	import TsLogo from '$lib/assets/images/ts-logo.svg';
-	import type { PageData } from './$types';
-	import type { Output, RatesheetWithIncludes } from '$lib/types/types';
-	export let data: PageData;
-	import { rawData } from '$lib/data/rawData';
+	// import TsLogo from '$lib/assets/images/ts-logo.svg';
+	// import type { PageData } from './$types';
+	import type { RatesheetWithIncludes } from '$lib/types/types';
+	// import { rawData } from '$lib/data/rawData';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import { getContext, onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
+
+	// export let data: PageData;
 
 	const ratesheetIdStorage = localStorageStore('ratesheetId', '');
 	const markupStorage = localStorageStore('markup', 0);
@@ -64,10 +65,6 @@
 	const optionsHeadersCount = (node: HTMLDivElement) => {
 		node.style.gridTemplateColumns = `repeat(${optionColHeaders.length - 1}, 1fr) 3fr`;
 	};
-
-	const vscData = rawData as Record<string, any>;
-
-	const output: Output = data?.output ?? { cardTypes: [], markup: '' };
 </script>
 
 {#if !$pendingStore && Object.keys(ratesheetData).length}
