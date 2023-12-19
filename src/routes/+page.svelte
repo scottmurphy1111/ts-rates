@@ -105,7 +105,7 @@
 		</label>
 		<label class="label" for="markup"
 			>Markup
-			<input class="input" bind:value={$markup} name="markup" required />
+			<input type="number" class="input" bind:value={$markup} name="markup" required />
 		</label>
 		<div class="flex flex-col gap-8">
 			<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base" for="cardTypes">
