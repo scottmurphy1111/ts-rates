@@ -27,8 +27,8 @@
 		'Term',
 		'Units',
 		'Mileage',
-		`${new Date().getFullYear()} - ${new Date().getFullYear() - 4} <br /> 0-${lowMileageCutoff}k`,
-		`${new Date().getFullYear()} - ${new Date().getFullYear() - 4} <br /> ${lowMileageCutoff}k+`,
+		`${new Date().getFullYear() - 4} &amp; newer <br /> 0-${lowMileageCutoff}k`,
+		`${new Date().getFullYear() - 4} &amp; newer <br /> ${lowMileageCutoff}k+`,
 		`${new Date().getFullYear() - 5} &amp; older <br /> 0-${lowMileageCutoff}k`,
 		`${new Date().getFullYear() - 5} &amp; older <br /> ${lowMileageCutoff}k+`,
 		'Deductible',
@@ -112,7 +112,7 @@
 			{/each}
 		{/if}
 		{#if ratesheet?.rows}
-			{#each ratesheet.rows as row, k}
+			{#each ratesheet.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue)) as row, k}
 				<input type="hidden" name="rowId" value={row.id} style="display:none" />
 				{#each Object.entries(row) as [key, value], i}
 					{#if i !== 0}

@@ -10,28 +10,60 @@
 	import { getContext, onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
 
-	const ratesheetStorage = localStorageStore('ratesheetId', 'test');
+	const ratesheetIdStorage = localStorageStore('ratesheetId', '');
+	const markupStorage = localStorageStore('markup', 0);
+
 	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
 	let ratesheetData = {} as RatesheetWithIncludes;
-	$: console.log('$ratesheetStorage', $ratesheetStorage);
+	$: console.log('$ratesheetIdStorage', $ratesheetIdStorage);
+	$: console.log('$markupStorage', $markupStorage);
 
 	const ratesheet = async () => {
 		pendingStore.set(true);
 
-		await fetch(`/api/ratesheet?id=${$ratesheetStorage}`)
-			.then((res) => res.json())
-			.then((data) => {
-				ratesheetData = data as RatesheetWithIncludes;
-				pendingStore.set(false);
-			});
+		try {
+			await fetch(`/api/ratesheet?id=${$ratesheetIdStorage}`)
+				.then((res) => {
+					pendingStore.set(false);
+					return res.json();
+				})
+				.then((data) => {
+					ratesheetData = data as RatesheetWithIncludes;
+				});
+		} catch (error) {
+			console.log('err', error);
+			pendingStore.set(false);
+		}
 	};
 
 	$: console.log('ratesheetData', ratesheetData);
 
 	onMount(async () => {
 		await ratesheet();
+		pendingStore.set(false);
 	});
+
+	$: rateColHeaders = [
+		'Term/Mileage Limits',
+		// 'Mileage',
+		`${new Date().getFullYear() - 4} &amp; newer / 0-${ratesheetData.lowMileageCutoff}K`,
+		`${new Date().getFullYear() - 4} &amp; newer / ${ratesheetData.lowMileageCutoff}K+`,
+		`${new Date().getFullYear() - 5} &amp; older / 0-${ratesheetData.lowMileageCutoff}K`,
+		`${new Date().getFullYear() - 5} &amp; older / ${ratesheetData.lowMileageCutoff}K+`,
+		'Deductible',
+		'Aggregate Limit'
+	];
+
+	const optionColHeaders = ['Package', 'Term', 'Cost'];
+
+	const ratesHeadersCount = (node: HTMLDivElement) => {
+		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, 1fr)`;
+	};
+
+	const optionsHeadersCount = (node: HTMLDivElement) => {
+		node.style.gridTemplateColumns = `repeat(${optionColHeaders.length - 1}, 1fr) 3fr`;
+	};
 
 	const vscData = rawData as Record<string, any>;
 
@@ -56,9 +88,107 @@
 			</div>
 		</header>
 		<main>
-			{#each ratesheetData?.rows as row}
+			<div class="flex flex-col gap-4 p-8">
+				<!-- Rates -->
+				<h2 class="h2">Rates</h2>
+				<div class="grid gap-2 mb-16 place-content-stretch place-items-start" use:ratesHeadersCount>
+					{#each rateColHeaders as header}
+						<div class="flex flex-col gap-1 text-lg font-extrabold text-left">
+							{@html header}
+						</div>
+					{/each}
+					{#if ratesheetData?.rows}
+						{#each ratesheetData.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue)) as row, k}
+							{#each Object.entries(row) as [key, value], i}
+								{#if i !== 0 && key !== 'termValue' && key !== 'termUnit' && key !== 'mileageValue' && key !== 'ratesheetId' && typeof value === 'string'}
+									<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+										${new Intl.NumberFormat('en-US', {
+											style: 'decimal',
+											currency: 'USD'
+										}).format(
+											key.startsWith('cost') ? Number(value) + $markupStorage : Number(value)
+										)}
+									</span>
+
+									<!-- {#if key === 'termUnit'}
+									<span class="inline-flex items-baseline gap-1">
+										<select class="input" name={`${key}`} {value}>
+											<option value="days">days</option>
+											<option value="months">months</option>
+										</select>
+									</span>
+								{/if} -->
+								{/if}
+								{#if key === 'termValue'}
+									<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+										{value}{row['termUnit']}/{row['mileageValue']}K
+									</span>
+								{/if}
+							{/each}
+						{/each}
+					{/if}
+				</div>
+
+				<!-- Options -->
+				<h2 class="h2">Options</h2>
+				<div class="grid gap-2 mb-16 place-content-end place-items-start" use:optionsHeadersCount>
+					{#each optionColHeaders as header}
+						<div class="flex flex-col gap-1 text-lg font-extrabold text-center">
+							{@html header}
+						</div>
+					{/each}
+					{#if ratesheetData?.options.sort((a, b) => {
+						if (a.packageName > b.packageName) {
+							return 1;
+						}
+						if (a.packageName < b.packageName) {
+							return -1;
+						}
+						return 0 || Number(a.termValue) - Number(b.termValue);
+					})}
+						{#each ratesheetData.options as option}
+							<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+								{option.packageName}
+							</span>
+							<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+								{option.termValue}{option.termValue === 'All' ? '' : option.termUnit}
+							</span>
+							<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+								${new Intl.NumberFormat('en-US', {
+									style: 'decimal',
+									currency: 'USD'
+								}).format(Number(option.cost))}
+							</span>
+						{/each}
+					{/if}
+				</div>
+
+				<!-- Disclosures -->
+				<h2 class="h2">Disclosures</h2>
+				<div class="flex flex-col gap-8 mb-16 items-start">
+					{#each ratesheetData?.disclosuresSet.disclosures.sort((a, b) => Number(a.order) - Number(b.order)) as disclosure}
+						<div class="flex flex-col gap-1 extrabold">
+							<h3 class="h3 uppercase">{@html disclosure.title}</h3>
+							<p>{@html disclosure.description}</p>
+						</div>
+					{/each}
+				</div>
+
+				<!-- Coverages -->
+				<h2 class="h2">Coverages</h2>
+				<div class="flex flex-col gap-8 mb-16 items-start">
+					{#each ratesheetData?.coveragesSet.coverages.sort((a, b) => Number(a.order) - Number(b.order)) as coverage}
+						<div class="flex flex-col gap-1 extrabold">
+							<h3 class="h3 uppercase">{@html coverage.title}</h3>
+							<p>{@html coverage.description}</p>
+						</div>
+					{/each}
+				</div>
+			</div>
+		</main>
+		<!-- {#each ratesheetData?.rows as row}
 				<div class="flex">
-					<span class="text-2xl font-bold">{row.termValue}</span>
+					<span class="text-2xl font-extrabold">{row.termValue}</span>
 					<span class="text-lg">{row.termUnit}</span>
 					<span class="text-lg">{row.mileageValue}</span>
 					<span class="text-lg">{row.costNewerLowMiles}</span>
@@ -73,13 +203,12 @@
 				<div class="flex flex-col">
 					<div class="flex flex-col">
 						<div class="flex flex-col">
-							<span class="text-2xl font-bold">{coverage.title}</span>
+							<span class="text-2xl font-extrabold">{coverage.title}</span>
 							<span class="text-lg">{coverage.description}</span>
 						</div>
 					</div>
 				</div>
 			{/each}
-		</main>
 
 		{ratesheetData?.id}
 		{ratesheetData?.name}
@@ -108,7 +237,7 @@
 			<div class="flex w-full p-4">
 				<div class="flex justify-between w-3/4 bg-ts-gray-md p-4 rounded">
 					<div class="flex flex-col items-center">
-						<div class="text-center font-bold text-xl">
+						<div class="text-center font-extrabold text-xl">
 							{@html vscData[cardType]?.body?.standards?.preheader}
 						</div>
 
@@ -128,7 +257,7 @@
 						</div>
 					</div>
 					<div class="flex flex-col items-center">
-						<div class="text-center font-bold text-xl">
+						<div class="text-center font-extrabold text-xl">
 							{@html vscData[cardType]?.body?.options?.preheader}
 						</div>
 						<div class="grid grid-cols-3 gap-2 justify-center items-center">
@@ -149,9 +278,9 @@
 				</div>
 				<div class="flex flex-col w-1/4">other text</div>
 			</div>
-			<h1 class="text-4xl font-bold text-center">Output</h1>
+			<h1 class="text-4xl font-extrabold text-center">Output</h1>
 			<p class="text-center">This is the output page</p>
 			<JustDrive />
-		</div>
-	{/each}
+      {/each} -->
+	</div>
 {/if}

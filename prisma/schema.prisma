@@ -69,7 +69,7 @@ model DisclosuresSet {
 model Disclosure {
   id               String         @id @default(uuid())
   title            String
-  description      String
+  description      String         @db.Text
   order            String
   disclosuresSetId String
   disclosuresSet   DisclosuresSet @relation(fields: [disclosuresSetId], references: [id])
@@ -87,7 +87,7 @@ model CoveragesSet {
 model Coverage {
   id             String       @id @default(uuid())
   title          String
-  description    String
+  description    String       @db.Text
   order          String
   coveragesSetId String
   coveragesSet   CoveragesSet @relation(fields: [coveragesSetId], references: [id])

@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { Modal, Toast } from '@skeletonlabs/skeleton';
+	import { AppShell, Modal, Toast } from '@skeletonlabs/skeleton';
 	import '../app.postcss';
-  import SpinnerIcon from '$lib/assets/icons/spinner.svelte';
+	import SpinnerIcon from '$lib/assets/icons/spinner.svelte';
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';
 	import { setContext } from 'svelte';
 
-  const pendingStore = writable<boolean>(false);
-  setContext('pendingStore', pendingStore);
-	
-  initializeStores();
+	const pendingStore = writable<boolean>(false);
+	setContext('pendingStore', pendingStore);
+
+	initializeStores();
 </script>
 
 {#if $pendingStore}
@@ -22,4 +22,6 @@
 {/if}
 <Toast />
 <Modal />
-<slot />
+<AppShell>
+	<slot />
+</AppShell>

@@ -16,16 +16,21 @@
 	const markup = writable(1000);
 	const customLogo = writable(null);
 
-	const ratesheetStorage: Writable<string> = localStorageStore('ratesheetId', $selectedRatesheetId);
+	const ratesheetIdStorage: Writable<string> = localStorageStore(
+		'ratesheetId',
+		$selectedRatesheetId
+	);
+	const markupStorage: Writable<number> = localStorageStore('markup', $markup);
 
-	$: console.log($ratesheetStorage);
+	$: console.log($ratesheetIdStorage);
 
 	const cardTypes = writable<string[]>([]);
 
 	$: splitTypes = $cardTypes?.toString();
 
 	function sendToOutput() {
-		ratesheetStorage.set($selectedRatesheetId);
+		ratesheetIdStorage.set($selectedRatesheetId);
+		markupStorage.set($markup);
 		const data = {
 			cardTypes: splitTypes,
 			markup: $markup.toString(),
