@@ -59,11 +59,13 @@
 	const optionColHeaders = ['Package', 'Term', 'Cost'];
 
 	const ratesHeadersCount = (node: HTMLDivElement) => {
-		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, 1fr)`;
+		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(min-content, auto))`;
 	};
 
 	const optionsHeadersCount = (node: HTMLDivElement) => {
-		node.style.gridTemplateColumns = `repeat(${optionColHeaders.length - 1}, 1fr) 3fr`;
+		node.style.gridTemplateColumns = `repeat(${
+			optionColHeaders.length - 1
+		}, minmax(250px, auto)) 3fr`;
 	};
 </script>
 
@@ -72,10 +74,10 @@
 		<header
 			class="bg-gradient-to-br variant-gradient-primary-secondary p-8 w-full text-white inline-flex justify-between items-center gap-16"
 		>
-			<div class="w-full max-w-sm">
-				<img class="" src={TsLogoDark} alt="ts-logo-dark" />
+			<div class="w-2/3">
+				<img class="max-w-sm" src={TsLogoDark} alt="ts-logo-dark" />
 			</div>
-			<div class="w-full">
+			<div class="w-1/3 ml-auto">
 				<h2 class="h2">
 					{ratesheetData?.title}
 				</h2>
@@ -87,27 +89,28 @@
 		<main>
 			<div class="flex flex-col gap-4 p-8">
 				<!-- Rates -->
-				<h2 class="h2">Rates</h2>
-				<div class="grid gap-2 mb-16 place-content-stretch place-items-start" use:ratesHeadersCount>
-					{#each rateColHeaders as header}
-						<div class="flex flex-col gap-1 text-lg font-extrabold text-left">
-							{@html header}
-						</div>
-					{/each}
-					{#if ratesheetData?.rows}
-						{#each ratesheetData.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue)) as row, k}
-							{#each Object.entries(row) as [key, value], i}
-								{#if i !== 0 && key !== 'termValue' && key !== 'termUnit' && key !== 'mileageValue' && key !== 'ratesheetId' && typeof value === 'string'}
-									<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-										${new Intl.NumberFormat('en-US', {
-											style: 'decimal',
-											currency: 'USD'
-										}).format(
-											key.startsWith('cost') ? Number(value) + $markupStorage : Number(value)
-										)}
-									</span>
+				<div class="card shadow-xl p-8 mb-4">
+					<h2 class="h2 mb-4">Rates</h2>
+					<div class="grid gap-2 place-content-stretch place-items-start" use:ratesHeadersCount>
+						{#each rateColHeaders as header}
+							<div class="flex flex-col gap-1 text-lg font-extrabold text-left">
+								{@html header}
+							</div>
+						{/each}
+						{#if ratesheetData?.rows}
+							{#each ratesheetData.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue)) as row, k}
+								{#each Object.entries(row) as [key, value], i}
+									{#if i !== 0 && key !== 'termValue' && key !== 'termUnit' && key !== 'mileageValue' && key !== 'ratesheetId' && typeof value === 'string'}
+										<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+											${new Intl.NumberFormat('en-US', {
+												style: 'decimal',
+												currency: 'USD'
+											}).format(
+												key.startsWith('cost') ? Number(value) + $markupStorage : Number(value)
+											)}
+										</span>
 
-									<!-- {#if key === 'termUnit'}
+										<!-- {#if key === 'termUnit'}
 									<span class="inline-flex items-baseline gap-1">
 										<select class="input" name={`${key}`} {value}>
 											<option value="days">days</option>
@@ -115,71 +118,75 @@
 										</select>
 									</span>
 								{/if} -->
-								{/if}
-								{#if key === 'termValue'}
-									<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-										{value}{row['termUnit']}/{row['mileageValue']}K
-									</span>
-								{/if}
+									{/if}
+									{#if key === 'termValue'}
+										<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+											{value}{row['termUnit']}/{row['mileageValue']}K
+										</span>
+									{/if}
+								{/each}
 							{/each}
-						{/each}
-					{/if}
+						{/if}
+					</div>
 				</div>
-
 				<!-- Options -->
-				<h2 class="h2">Options</h2>
-				<div class="grid gap-2 mb-16 place-content-end place-items-start" use:optionsHeadersCount>
-					{#each optionColHeaders as header}
-						<div class="flex flex-col gap-1 text-lg font-extrabold text-center">
-							{@html header}
-						</div>
-					{/each}
-					{#if ratesheetData?.options.sort((a, b) => {
-						if (a.packageName > b.packageName) {
-							return 1;
-						}
-						if (a.packageName < b.packageName) {
-							return -1;
-						}
-						return 0 || Number(a.termValue) - Number(b.termValue);
-					})}
-						{#each ratesheetData.options as option}
-							<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-								{option.packageName}
-							</span>
-							<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-								{option.termValue}{option.termValue === 'All' ? '' : option.termUnit}
-							</span>
-							<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-								${new Intl.NumberFormat('en-US', {
-									style: 'decimal',
-									currency: 'USD'
-								}).format(Number(option.cost))}
-							</span>
+				<div class="card shadow-xl p-8 mb-4">
+					<h2 class="h2 mb-4">Options</h2>
+					<div class="grid gap-2 place-content-end place-items-start" use:optionsHeadersCount>
+						{#each optionColHeaders as header}
+							<div class="flex flex-col gap-1 text-lg font-extrabold text-center">
+								{@html header}
+							</div>
 						{/each}
-					{/if}
+						{#if ratesheetData?.options.sort((a, b) => {
+							if (a.packageName > b.packageName) {
+								return 1;
+							}
+							if (a.packageName < b.packageName) {
+								return -1;
+							}
+							return 0 || Number(a.termValue) - Number(b.termValue);
+						})}
+							{#each ratesheetData.options as option}
+								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+									{option.packageName}
+								</span>
+								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+									{option.termValue}{option.termValue === 'All' ? '' : option.termUnit}
+								</span>
+								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
+									${new Intl.NumberFormat('en-US', {
+										style: 'decimal',
+										currency: 'USD'
+									}).format(Number(option.cost))}
+								</span>
+							{/each}
+						{/if}
+					</div>
 				</div>
-
 				<!-- Disclosures -->
-				<h2 class="h2">Disclosures</h2>
-				<div class="flex flex-col gap-8 mb-16 items-start">
-					{#each ratesheetData?.disclosuresSet.disclosures.sort((a, b) => Number(a.order) - Number(b.order)) as disclosure}
-						<div class="flex flex-col gap-1 extrabold">
-							<h3 class="h3 uppercase">{@html disclosure.title}</h3>
-							<p>{@html disclosure.description}</p>
-						</div>
-					{/each}
+				<div class="card shadow-xl p-8 mb-4">
+					<h2 class="h2 mb-4">Disclosures</h2>
+					<div class="flex flex-col gap-8 items-start">
+						{#each ratesheetData?.disclosuresSet.disclosures.sort((a, b) => Number(a.order) - Number(b.order)) as disclosure}
+							<div class="flex flex-col gap-1 extrabold">
+								<h3 class="h3 uppercase text-base">{@html disclosure.title}</h3>
+								<p>{@html disclosure.description}</p>
+							</div>
+						{/each}
+					</div>
 				</div>
-
 				<!-- Coverages -->
-				<h2 class="h2">Coverages</h2>
-				<div class="flex flex-col gap-8 mb-16 items-start">
-					{#each ratesheetData?.coveragesSet.coverages.sort((a, b) => Number(a.order) - Number(b.order)) as coverage}
-						<div class="flex flex-col gap-1 extrabold">
-							<h3 class="h3 uppercase">{@html coverage.title}</h3>
-							<p>{@html coverage.description}</p>
-						</div>
-					{/each}
+				<div class="card shadow-xl p-8 mb-4">
+					<h2 class="h2 mb-4">Coverages</h2>
+					<div class="flex flex-col gap-8 items-start">
+						{#each ratesheetData?.coveragesSet.coverages.sort((a, b) => Number(a.order) - Number(b.order)) as coverage}
+							<div class="flex flex-col gap-1 extrabold">
+								<h3 class="h3 uppercase text-base">{@html coverage.title}</h3>
+								<p>{@html coverage.description}</p>
+							</div>
+						{/each}
+					</div>
 				</div>
 			</div>
 		</main>

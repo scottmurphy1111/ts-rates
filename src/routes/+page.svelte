@@ -85,30 +85,36 @@
 	];
 </script>
 
-<div class="w-full gap-8 flex flex-col justify-center items-center p-4">
-	<div class="flex flex-col mb-4 gap-4 items-center">
-		<a class="flex" href="/">
-			<img class="block w-full" src={logo} alt="ts-logo" />
-		</a>
-		<h2 class="text-xl text-center p-0">Ratesheet Generator</h2>
-	</div>
-	<!-- <form method="post" use:enhance enctype="multipart/form-data"> -->
-	<div class="flex flex-col gap-8">
-		<label class="label" for="selectedRatesheetId">
-			Make Selection
-			<select required class="select" bind:value={$selectedRatesheetId} name="selectedRatesheetId">
-				<option value disabled>Pick a Ratesheet</option>
-				{#each ratesheets as ratesheet}
-					<option value={ratesheet.id}>{ratesheet.title}</option>
-				{/each}
-			</select>
-		</label>
-		<label class="label" for="markup"
-			>Markup
-			<input type="number" class="input" bind:value={$markup} name="markup" required />
-		</label>
+<div class="w-full gap-8 flex flex-col p-4 items-center justify-center">
+	<div class="card shadow-xl w-1/4 p-8 justify-center items-center">
+		<div class="flex flex-col mb-4 gap-4 items-center justify-center w-full">
+			<a class="flex items-center justify-center w-[400px]" href="/">
+				<img class="block w-full" src={logo} alt="ts-logo" />
+			</a>
+			<h2 class="text-xl text-center p-0">Ratesheet Generator</h2>
+		</div>
+		<!-- <form method="post" use:enhance enctype="multipart/form-data"> -->
 		<div class="flex flex-col gap-8">
-			<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base" for="cardTypes">
+			<label class="label" for="selectedRatesheetId">
+				Make Selection
+				<select
+					required
+					class="select"
+					bind:value={$selectedRatesheetId}
+					name="selectedRatesheetId"
+				>
+					<option value disabled>Pick a Ratesheet</option>
+					{#each ratesheets as ratesheet}
+						<option value={ratesheet.id}>{ratesheet.title}</option>
+					{/each}
+				</select>
+			</label>
+			<label class="label" for="markup"
+				>Markup
+				<input type="number" class="input" bind:value={$markup} name="markup" required />
+			</label>
+			<div class="flex flex-col gap-8">
+				<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base" for="cardTypes">
 					Select Dealership
 					<select required class="select" value={'dealer'} name="cardTypes">
 						<option value="1">Dealership 1</option>
@@ -119,21 +125,21 @@
             {/each} 
 					 </select></label 
 				> -->
-			<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
-				>Upload a Logo (Optional)
-				<input
-					type="file"
-					name="customLogo"
-					accept="image/png, image/jpeg"
-					bind:value={$customLogo}
-				/>
-			</label>
-			<button
-				class="btn variant-filled-primary"
-				type="button"
-				on:click|preventDefault={sendToOutput}>Generate</button
-			>
-			<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base"
+				<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
+					>Upload a Logo (Optional)
+					<input
+						type="file"
+						name="customLogo"
+						accept="image/png, image/jpeg"
+						bind:value={$customLogo}
+					/>
+				</label>
+				<button
+					class="btn variant-filled-primary"
+					type="button"
+					on:click|preventDefault={sendToOutput}>Generate</button
+				>
+				<!-- <label class="flex flex-col gap-2 font-semibold justify-center text-base"
 				>Term Length
 				<select class="border border-ts-gray-md rounded py-3 px-4" bind:value={$term}>
 					{#each termOptions as option}
@@ -141,7 +147,7 @@
 					{/each}
 				</select>
 			</label> -->
-			<!-- <div>
+				<!-- <div>
 				<span class="font-medium mb-2 flex">Your estimated weekly payment amount is:</span>
 				<div class="w-full flex flex-col font-semibold mb-4 text-center">
 					<span class="w-full inline-flex text-4xl justify-center">
@@ -154,12 +160,13 @@
 					subject to credit approval and may differ from the above calculation.</span
 				>
 			</div> -->
+			</div>
 		</div>
-	</div>
-	<!-- </form> -->
-	<div class="w-full mt-8 flex justify-center items-center">
-		<div class="w-1/3">
-			<JustDriveIcon />
+		<!-- </form> -->
+		<div class="w-full mt-8 flex justify-center items-center">
+			<div class="w-2/5">
+				<JustDriveIcon />
+			</div>
 		</div>
 	</div>
 	<!-- </div> -->
