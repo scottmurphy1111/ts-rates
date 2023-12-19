@@ -46,12 +46,12 @@
 	});
 
 	$: rateColHeaders = [
-		'Term/Mileage Limits',
+		'Term / Mileage Limits',
 		// 'Mileage',
-		`${new Date().getFullYear() - 4} &amp; newer / 0-${ratesheetData.lowMileageCutoff}K`,
-		`${new Date().getFullYear() - 4} &amp; newer / ${ratesheetData.lowMileageCutoff}K+`,
-		`${new Date().getFullYear() - 5} &amp; older / 0-${ratesheetData.lowMileageCutoff}K`,
-		`${new Date().getFullYear() - 5} &amp; older / ${ratesheetData.lowMileageCutoff}K+`,
+		`${new Date().getFullYear() - 4} &amp; Newer / 0-${ratesheetData.lowMileageCutoff}K`,
+		`${new Date().getFullYear() - 4} &amp; Newer / ${ratesheetData.lowMileageCutoff}K+`,
+		`${new Date().getFullYear() - 5} &amp; Older / 0-${ratesheetData.lowMileageCutoff}K`,
+		`${new Date().getFullYear() - 5} &amp; Older / ${ratesheetData.lowMileageCutoff}K+`,
 		'Deductible',
 		'Aggregate Limit'
 	];
@@ -81,7 +81,7 @@
 				<h2 class="h2">
 					{ratesheetData?.title}
 				</h2>
-				<h3 class="h3">
+				<h3 class="h3 font-semibold">
 					{ratesheetData?.subtitle}
 				</h3>
 			</div>
@@ -89,8 +89,8 @@
 		<main>
 			<div class="flex flex-col gap-4 p-8">
 				<!-- Rates -->
-				<div class="card shadow-xl p-8 mb-4">
-					<h2 class="h2 mb-4">Rates</h2>
+				<h2 class="h2 mb-4">Rates</h2>
+				<div class="card shadow-xl p-8 mb-16">
 					<div class="grid gap-2 place-content-stretch place-items-start" use:ratesHeadersCount>
 						{#each rateColHeaders as header}
 							<div class="flex flex-col gap-1 text-lg font-extrabold text-left">
@@ -121,7 +121,8 @@
 									{/if}
 									{#if key === 'termValue'}
 										<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-											{value}{row['termUnit']}/{row['mileageValue']}K
+											{value}
+											{row['termUnit']} / {row['mileageValue']}K
 										</span>
 									{/if}
 								{/each}
@@ -130,8 +131,8 @@
 					</div>
 				</div>
 				<!-- Options -->
-				<div class="card shadow-xl p-8 mb-4">
-					<h2 class="h2 mb-4">Options</h2>
+				<h2 class="h2 mb-4">Options</h2>
+				<div class="card shadow-xl p-8 mb-16">
 					<div class="grid gap-2 place-content-end place-items-start" use:optionsHeadersCount>
 						{#each optionColHeaders as header}
 							<div class="flex flex-col gap-1 text-lg font-extrabold text-center">
@@ -152,7 +153,8 @@
 									{option.packageName}
 								</span>
 								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-									{option.termValue}{option.termValue === 'All' ? '' : option.termUnit}
+									{option.termValue}
+									{option.termValue === 'All' ? '' : option.termUnit}
 								</span>
 								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
 									${new Intl.NumberFormat('en-US', {
@@ -165,24 +167,28 @@
 					</div>
 				</div>
 				<!-- Disclosures -->
-				<div class="card shadow-xl p-8 mb-4">
-					<h2 class="h2 mb-4">Disclosures</h2>
+				<h2 class="h2 mb-4">Disclosures</h2>
+				<div class="card shadow-xl p-8 mb-16">
 					<div class="flex flex-col gap-8 items-start">
 						{#each ratesheetData?.disclosuresSet.disclosures.sort((a, b) => Number(a.order) - Number(b.order)) as disclosure}
 							<div class="flex flex-col gap-1 extrabold">
-								<h3 class="h3 uppercase text-base">{@html disclosure.title}</h3>
+								<h3 class="h3 uppercase text-base text-primary-500 font-semibold">
+									{@html disclosure.title}
+								</h3>
 								<p>{@html disclosure.description}</p>
 							</div>
 						{/each}
 					</div>
 				</div>
 				<!-- Coverages -->
-				<div class="card shadow-xl p-8 mb-4">
-					<h2 class="h2 mb-4">Coverages</h2>
+				<h2 class="h2 mb-4">Coverages</h2>
+				<div class="card shadow-xl p-8 mb-16">
 					<div class="flex flex-col gap-8 items-start">
 						{#each ratesheetData?.coveragesSet.coverages.sort((a, b) => Number(a.order) - Number(b.order)) as coverage}
 							<div class="flex flex-col gap-1 extrabold">
-								<h3 class="h3 uppercase text-base">{@html coverage.title}</h3>
+								<h3 class="h3 uppercase text-base text-primary-500 font-semibold">
+									{@html coverage.title}
+								</h3>
 								<p>{@html coverage.description}</p>
 							</div>
 						{/each}
