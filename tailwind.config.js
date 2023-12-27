@@ -19,7 +19,14 @@ export default {
 			'ts-gray-md': '#D5D5D5',
 			white: colors.white,
 			black: colors.black,
-			red: colors.red
+			red: colors.red,
+      teal: colors.teal,
+      slate: colors.slate,
+      amber: colors.amber,
+      blue: colors.blue,
+      sky: colors.sky,
+      indigo: colors.indigo,
+      rose: colors.rose
 		}
 	},
 	plugins: [
@@ -30,5 +37,14 @@ export default {
 				custom: [customTheme]
 			}
 		})
-	]
+	],
+  purge: {
+    options: {
+      safelist: [
+        {
+          pattern: /(from|to|bg|text)-(red|teal|slate|amber|primary|sky|indigo|rose)-(500|900)/
+        }
+      ]
+    }
+  }
 } satisfies Config;

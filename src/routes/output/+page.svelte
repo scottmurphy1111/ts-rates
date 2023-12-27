@@ -6,197 +6,102 @@
 	import type { RatesheetWithIncludes } from '$lib/types/types';
 	// import { rawData } from '$lib/data/rawData';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
+
 	import { getContext, onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
+	import RatesOutput from './RatesOutput.svelte';
+	import OptionsOutput from './OptionsOutput.svelte';
+	import DisclosuresOutput from './DisclosuresOutput.svelte';
+	import CoveragesOutput from './CoveragesOutput.svelte';
+	import type { PageData } from './$types';
 
-	// export let data: PageData;
+	export let data: PageData;
+
+	$: ({ output, ratesheet } = data);
+
+	$: console.log('output', output);
 
 	const ratesheetIdStorage = localStorageStore('ratesheetId', '');
-	const markupStorage = localStorageStore('markup', 0);
+	const colorStorage = localStorageStore('color', 'primary');
+
+	$: colorFrom = `from-${output?.color}-500`;
+	$: colorTo = `to-${output?.color}-900`;
 
 	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
 	let ratesheetData = {} as RatesheetWithIncludes;
-	$: console.log('$ratesheetIdStorage', $ratesheetIdStorage);
-	$: console.log('$markupStorage', $markupStorage);
 
-	const ratesheet = async () => {
-		pendingStore.set(true);
+	// const ratesheet = async () => {
+	// 	pendingStore.set(true);
 
-		try {
-			await fetch(`/api/ratesheet?id=${$ratesheetIdStorage}`)
-				.then((res) => {
-					pendingStore.set(false);
-					return res.json();
-				})
-				.then((data) => {
-					ratesheetData = data as RatesheetWithIncludes;
-				});
-		} catch (error) {
-			console.log('err', error);
-			pendingStore.set(false);
-		}
-	};
+	// 	try {
+	// 		await fetch(`/api/ratesheet?id=${$ratesheetIdStorage}`)
+	// 			.then((res) => {
+	// 				pendingStore.set(false);
+	// 				return res.json();
+	// 			})
+	// 			.then((data) => {
+	// 				ratesheetData = data as RatesheetWithIncludes;
+	// 			});
+	// 	} catch (error) {
+	// 		console.log('err', error);
+	// 		pendingStore.set(false);
+	// 	}
+	// };
 
-	$: console.log('ratesheetData', ratesheetData);
+	// const rateOutput = async () => {
+	// 	await fetch(`/api/rateOutput?id=${$ratesheetIdStorage}`)
+	// 		.then((res) => {
+	// 			pendingStore.set(false);
+	// 			return res.json();
+	// 		})
+	// 		.then((data) => {
+	// 			console.log('🤮 data', data);
+	// 		});
+	// };
 
-	onMount(async () => {
-		await ratesheet();
-		pendingStore.set(false);
-	});
+	// onMount(async () => {
+	// 	// await ratesheet();
+	// 	await rateOutput();
+	// 	pendingStore.set(false);
 
-	$: rateColHeaders = [
-		'Term / Mileage Limits',
-		// 'Mileage',
-		`${new Date().getFullYear() - 4} &amp; Newer / 0-${ratesheetData.lowMileageCutoff}K`,
-		`${new Date().getFullYear() - 4} &amp; Newer / ${ratesheetData.lowMileageCutoff}K+`,
-		`${new Date().getFullYear() - 5} &amp; Older / 0-${ratesheetData.lowMileageCutoff}K`,
-		`${new Date().getFullYear() - 5} &amp; Older / ${ratesheetData.lowMileageCutoff}K+`,
-		'Deductible',
-		'Aggregate Limit'
-	];
-
-	const optionColHeaders = ['Package', 'Term', 'Cost'];
-
-	const ratesHeadersCount = (node: HTMLDivElement) => {
-		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(min-content, auto))`;
-	};
-
-	const optionsHeadersCount = (node: HTMLDivElement) => {
-		node.style.gridTemplateColumns = `repeat(${
-			optionColHeaders.length - 1
-		}, minmax(250px, auto)) 3fr`;
-	};
+	// 	console.log('ratesheetData', ratesheetData);
+	// 	console.log('rateOutput', rateOutput);
+	// });
 </script>
 
-{#if !$pendingStore && Object.keys(ratesheetData).length}
-	<div class="flex flex-col">
-		<header
-			class="bg-gradient-to-br variant-gradient-primary-secondary p-8 w-full text-white inline-flex justify-between items-center gap-16"
-		>
-			<div class="w-2/3">
-				<img class="max-w-sm" src={TsLogoDark} alt="ts-logo-dark" />
-			</div>
-			<div class="w-1/3 ml-auto">
-				<h2 class="h2">
-					{ratesheetData?.title}
-				</h2>
-				<h3 class="h3 font-semibold">
-					{ratesheetData?.subtitle}
-				</h3>
-			</div>
-		</header>
-		<main>
-			<div class="flex flex-col gap-4 p-8">
-				<!-- Rates -->
-				<h2 class="h2 mb-4">Rates</h2>
-				<div class="card shadow-xl p-8 mb-16">
-					<div class="grid gap-2 place-content-stretch place-items-start" use:ratesHeadersCount>
-						{#each rateColHeaders as header}
-							<div class="flex flex-col gap-1 text-lg font-extrabold text-left">
-								{@html header}
-							</div>
-						{/each}
-						{#if ratesheetData?.rows}
-							{#each ratesheetData.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue)) as row, k}
-								{#each Object.entries(row) as [key, value], i}
-									{#if i !== 0 && key !== 'termValue' && key !== 'termUnit' && key !== 'mileageValue' && key !== 'ratesheetId' && typeof value === 'string'}
-										<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-											${new Intl.NumberFormat('en-US', {
-												style: 'decimal',
-												currency: 'USD'
-											}).format(
-												key.startsWith('cost') ? Number(value) + $markupStorage : Number(value)
-											)}
-										</span>
-
-										<!-- {#if key === 'termUnit'}
-									<span class="inline-flex items-baseline gap-1">
-										<select class="input" name={`${key}`} {value}>
-											<option value="days">days</option>
-											<option value="months">months</option>
-										</select>
-									</span>
-								{/if} -->
-									{/if}
-									{#if key === 'termValue'}
-										<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-											{value}
-											{row['termUnit']} / {row['mileageValue']}K
-										</span>
-									{/if}
-								{/each}
-							{/each}
-						{/if}
-					</div>
+{#if ratesheet && output}
+	{#if !$pendingStore && Object.keys(ratesheet).length}
+		<div class="flex flex-col">
+			<header
+				class="bg-gradient-to-br {colorFrom} {colorTo} p-8 w-full text-white inline-flex justify-between items-center gap-16"
+			>
+				<div class="w-2/3 flex gap-4 items-center">
+					{#if output?.logoUrl}
+						<img class="w-1/2" src={output.logoUrl} alt="Custom Logo" />
+					{/if}
+					<a class="w-full" href="/">
+						<img class="w-1/2" src={TsLogoDark} alt="ts-logo-dark" />
+					</a>
 				</div>
-				<!-- Options -->
-				<h2 class="h2 mb-4">Options</h2>
-				<div class="card shadow-xl p-8 mb-16">
-					<div class="grid gap-2 place-content-end place-items-start" use:optionsHeadersCount>
-						{#each optionColHeaders as header}
-							<div class="flex flex-col gap-1 text-lg font-extrabold text-center">
-								{@html header}
-							</div>
-						{/each}
-						{#if ratesheetData?.options.sort((a, b) => {
-							if (a.packageName > b.packageName) {
-								return 1;
-							}
-							if (a.packageName < b.packageName) {
-								return -1;
-							}
-							return 0 || Number(a.termValue) - Number(b.termValue);
-						})}
-							{#each ratesheetData.options as option}
-								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-									{option.packageName}
-								</span>
-								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-									{option.termValue}
-									{option.termValue === 'All' ? '' : option.termUnit}
-								</span>
-								<span class="inline-flex items-baseline gap-1 text-xl font-semibold">
-									${new Intl.NumberFormat('en-US', {
-										style: 'decimal',
-										currency: 'USD'
-									}).format(Number(option.cost))}
-								</span>
-							{/each}
-						{/if}
-					</div>
+				<div class="w-1/3 ml-auto">
+					<h2 class="h2">
+						{ratesheet?.title}
+					</h2>
+					<h3 class="h3 font-semibold">
+						{ratesheet?.subtitle}
+					</h3>
 				</div>
-				<!-- Disclosures -->
-				<h2 class="h2 mb-4">Disclosures</h2>
-				<div class="card shadow-xl p-8 mb-16">
-					<div class="flex flex-col gap-8 items-start">
-						{#each ratesheetData?.disclosuresSet.disclosures.sort((a, b) => Number(a.order) - Number(b.order)) as disclosure}
-							<div class="flex flex-col gap-1 extrabold">
-								<h3 class="h3 uppercase text-base text-primary-500 font-semibold">
-									{@html disclosure.title}
-								</h3>
-								<p>{@html disclosure.description}</p>
-							</div>
-						{/each}
-					</div>
+			</header>
+			<main>
+				<div class="flex flex-col gap-4 p-8 text-sm">
+					<RatesOutput ratesheetData={ratesheet} />
+					<OptionsOutput ratesheetData={ratesheet} />
+					<DisclosuresOutput ratesheetData={ratesheet} color={output.color} />
+					<CoveragesOutput ratesheetData={ratesheet} color={output.color} />
 				</div>
-				<!-- Coverages -->
-				<h2 class="h2 mb-4">Coverages</h2>
-				<div class="card shadow-xl p-8 mb-16">
-					<div class="flex flex-col gap-8 items-start">
-						{#each ratesheetData?.coveragesSet.coverages.sort((a, b) => Number(a.order) - Number(b.order)) as coverage}
-							<div class="flex flex-col gap-1 extrabold">
-								<h3 class="h3 uppercase text-base text-primary-500 font-semibold">
-									{@html coverage.title}
-								</h3>
-								<p>{@html coverage.description}</p>
-							</div>
-						{/each}
-					</div>
-				</div>
-			</div>
-		</main>
-		<!-- {#each ratesheetData?.rows as row}
+			</main>
+			<!-- {#each ratesheetData?.rows as row}
 				<div class="flex">
 					<span class="text-2xl font-extrabold">{row.termValue}</span>
 					<span class="text-lg">{row.termUnit}</span>
@@ -292,5 +197,6 @@
 			<p class="text-center">This is the output page</p>
 			<JustDrive />
       {/each} -->
-	</div>
+		</div>
+	{/if}
 {/if}

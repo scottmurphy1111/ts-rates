@@ -94,3 +94,21 @@ model Coverage {
 
   @@index([coveragesSetId])
 }
+
+model RateOutput {
+  id          String   @id @default(uuid())
+  ratesheetId String
+  markups     Markup[]
+  color       String   @default("primary")
+  logoUrl     String?
+}
+
+model Markup {
+  id           String     @id @default(uuid())
+  termValue    String
+  markupValue  String
+  rateOutputId String
+  rateOutput   RateOutput @relation(fields: [rateOutputId], references: [id])
+
+  @@index([rateOutputId])
+}

@@ -7,6 +7,7 @@ async function main() {
 
 	const ratesheet1 = await prisma.ratesheet.create({
 		data: {
+			id: 'class_8',
 			name: 'class_8',
 			title: 'Class 8',
 			subtitle: 'Class 8 trucks are the largest on-road trucks',
@@ -111,6 +112,7 @@ async function main() {
 
 	const ratesheet2 = await prisma.ratesheet.create({
 		data: {
+			id: 'class_8_FTL',
 			name: 'class_8_FTL',
 			title: 'Class 8 Freightliner',
 			subtitle: 'Freightliner Exclusive',
@@ -207,6 +209,35 @@ async function main() {
 		}
 	});
 
+	const rateOutput = await prisma.rateOutput.create({
+		data: {
+			id: '1',
+			ratesheetId: 'class_8',
+			color: 'sky',
+			logoUrl:
+				'https://logos-download.com/wp-content/uploads/2016/02/Freightliner-logo-original.png',
+			markups: {
+				create: [
+					{
+						termValue: '12',
+						markupValue: '500'
+					},
+					{
+						termValue: '24',
+						markupValue: '1000'
+					},
+					{
+						termValue: '36',
+						markupValue: '1500'
+					},
+					{
+						termValue: '48',
+						markupValue: '2000'
+					}
+				]
+			}
+		}
+	});
 	// const disclosure1 = await prisma.disclosure.create({
 	// 	data: {
 	// 		title: 'Eligibility',
@@ -222,6 +253,7 @@ async function main() {
 
 	console.log(`Created the Following Disclosures Set: ${disclosuresSet.name}`);
 	console.log(`Created the Following Coverages Set: ${coveragesSet.name}`);
+	console.log(`Created the Following Rate Output: ${rateOutput.id}`);
 	console.log(`Seeding finished.`);
 }
 

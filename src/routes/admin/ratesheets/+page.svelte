@@ -13,6 +13,7 @@
 	import type { Row, Option } from '@prisma/client';
 
 	export let data: PageData;
+	$: ({ ratesheets, disclosuresSets, coveragesSets } = data);
 
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
@@ -27,7 +28,6 @@
 	setContext('emptyRatesRowStore', emptyRatesRowStore);
 	setContext('emptyOptionsRowStore', emptyOptionsRowStore);
 
-	$: ({ ratesheets, disclosuresSets, coveragesSets } = data);
 	let ratesheet: RatesheetWithIncludes | null = null;
 
 	$: selectedRatesheetId = ratesheet?.id ?? '';
