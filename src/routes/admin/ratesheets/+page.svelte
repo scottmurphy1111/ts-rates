@@ -73,7 +73,7 @@
 		pendingStore.set(true);
 		creatingRatesheetStore.set(false);
 
-		await fetch(`/api/ratesheet?id=${ratesheetId}`)
+		await fetch(`/api/ratesheets?id=${ratesheetId}`)
 			.then(async (res) => {
 				if (res.ok) {
 					ratesheet = (await res.json()) as RatesheetWithIncludes;
@@ -131,7 +131,7 @@
 				return;
 			}
 
-			await fetch(`/api/ratesheet?id=${ratesheet?.id}`, {
+			await fetch(`/api/ratesheets?id=${ratesheet?.id}`, {
 				method: 'DELETE'
 			})
 				.then(async (res) => {

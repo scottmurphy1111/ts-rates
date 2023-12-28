@@ -30,13 +30,10 @@
 			}
 
 			acc[key] = acc[key].sort((a, b) => Number(a.termValue) - Number(b.termValue));
-			// console.log('acc ❤️', acc);
 			return acc;
 		},
 		{} as Record<string, Record<string, string>[]>
 	);
-
-	console.log('groupOptionsByPackage', groupOptionsByPackage);
 
 	$: groupOptionsByTerm = ratesheetData?.options?.reduce(
 		(acc, option) => {
@@ -63,7 +60,6 @@
 			}
 
 			acc[key] = acc[key].sort((a, b) => Number(a.termValue) - Number(b.termValue));
-			// console.log('acc 🥶', acc);
 			acc = Object.entries(acc).reduce(
 				(acc, [key, value]) => {
 					acc[key] = value.sort((a, b) => {
@@ -86,9 +82,6 @@
 		{} as Record<string, Record<string, string>[]>
 	);
 
-	$: console.log('groupOptionsByPackage', groupOptionsByPackage);
-	$: console.log('groupOptionsByTerm', groupOptionsByTerm);
-
 	$: optionsHeadersCount = (node: HTMLDivElement) => {
 		// get count of non All options plus 1 for empty first column
 		const count = Object.entries(groupOptionsByPackage).reduce((acc, [key, value]) => {
@@ -106,7 +99,11 @@
 <!-- Options -->
 <h3 class="h3 text-2xl font-semibold mb-2">Options</h3>
 <div class="card shadow-xl flex p-8 mb-8 w-min">
-	<div class="grid gap-4 justify-items-center border-r border-ts-gray-md" use:optionsHeadersCount>
+	<div
+		class="grid gap-4 justify-items-center border-ts-gray-md"
+		class:border-r={groupOptionsByTerm['All']}
+		use:optionsHeadersCount
+	>
 		<div class="flex flex-col gap-1 text-base font-extrabold text-center">Term Lengths</div>
 		{#each Object.entries(groupOptionsByPackage).sort((a, b) => {
 			if (a[0] > b[0]) {

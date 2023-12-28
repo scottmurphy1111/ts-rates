@@ -1,15 +1,9 @@
 <script lang="ts">
 	import logo from '$lib/assets/images/ts-logo.svg';
 	import JustDriveIcon from '$lib/assets/icons/just-drive.svelte';
-
 	import { writable, type Writable } from 'svelte/store';
 	import { enhance } from '$app/forms';
-	// import { goto } from '$app/navigation';
 	import type { PageData } from './$types';
-	import { localStorageStore } from '@skeletonlabs/skeleton';
-	import { fade, fly, slide } from 'svelte/transition';
-	// import path from 'path';
-	// import { writeFileSync } from 'fs';
 
 	export let data: PageData;
 
@@ -23,100 +17,7 @@
 	let selectedColor = writable('primary');
 	const customLogo = writable(null);
 
-	const ratesheetIdStorage: Writable<string> = localStorageStore(
-		'ratesheetId',
-		$selectedRatesheetId
-	);
-	// const markup12Storage: Writable<number> = localStorageStore('markup', $markup);
-	// const colorStorage: Writable<string> = localStorageStore('color', $color);
-	const customLogoStorage: Writable<string | null> = localStorageStore('customLogo', $customLogo);
 	$: colorBg = `bg-${$selectedColor}-500`;
-
-	// $: console.log($color);
-
-	// $: console.log($ratesheetIdStorage);
-	// $: console.log($customLogoStorage);
-
-	// // const cardTypes = writable<string[]>([]);
-
-	// // $: splitTypes = $cardTypes?.toString();
-
-	// // async function sendToOutput() {
-	// // 	ratesheetIdStorage.set($selectedRatesheetId);
-	// // 	markupStorage.set($markup);
-	// // 	customLogoStorage.set($customLogo);
-	// // const data = {
-	// // 	cardTypes: splitTypes,
-	// // 	markup: $markup.toString(),
-	// // 	customLogo: $customLogo
-	// // };
-
-	// // const customLogo = data.get('customLogo');
-
-	// // if (!cardTypes || !markup) {
-	// // 	return fail(400, { err: 'Cannot create Rate Card Template' });
-	// // }
-	// // cookies.set('cardTypes', JSON.stringify(cardTypes), { maxAge: 24 * 60 * 60 });
-	// // cookies.set('markup', JSON.stringify(markup), { maxAge: 24 * 60 * 60 });
-
-	// // if (($customLogo as File).size) {
-	// // 	const file = $customLogo as File;
-	// // 	const imageResource = `customLogos/${crypto.randomUUID()}.${file.type.split('/')[1]}`;
-	// // 	const filePath = path.join(process.cwd(), 'static', imageResource);
-
-	// // 	writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
-	// // 	// cookies.set('customLogo', imageResource, { maxAge: 24 * 60 * 60 });
-	// // } else {
-	// // 	// cookies.set('customLogo', '', { maxAge: -1 });
-	// // }
-
-	// // 	goto('/output', { state: data });
-	// // }
-
-	// // const products: Record<string, any> = {
-	// // 	class_8: 'Class 8 Diesel - Commercial Truck',
-	// // 	class_8_FL: 'Class 8 Diesel - Commercial Truck - Freightliner',
-	// // 	class_8_30_day: 'Class 8 Diesel - Commercial Truck - 30 Day',
-	// // 	class_5_7_Diesel: 'Class 5-7 Diesel - Commercial Truck',
-	// // 	class_5_7_Gas: 'Class 5-7 Gas - Commercial Truck',
-	// // 	class_3_4_Diesel: 'Class 3-4 Diesel - Commercial Truck',
-	// // 	class_3_4_Gas: 'Class 3-4 Gas - Commercial Truck'
-	// // };
-
-	// // const tableData = [
-	// // 	{
-	// // 		term: '12 month',
-	// // 		mileage: '125,000',
-	// // 		aggregateLimit: '30,000',
-	// // 		specs: {
-	// // 			ageRange: '0 - 5 years',
-	// // 			milesRange: '0 - 600,000 miles',
-	// // 			cost: 4000
-	// // 		},
-	// // 		deductible: 350,
-	// // 		options: [
-	// // 			{
-	// // 				type: 'TransDiff',
-	// // 				cost: 475
-	// // 			},
-	// // 			{
-	// // 				type: 'HVAC',
-	// // 				cost: 450
-	// // 			}
-	// // 		],
-	// // 		coveragesContent: [
-	// // 			{
-	// // 				title: 'Engine',
-	// // 				body: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nostrum dolorum deleniti quae modi numquam, repellat esse provident reprehenderit ipsum, ea, ducimus ut perspiciatis impedit doloribus illum eveniet minima ullam consectetur?'
-	// // 			},
-	// // 			{
-	// // 				title: 'Aftertreatment',
-	// // 				body: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nostrum dolorum deleniti quae modi numquam, repellat esse provident reprehenderit ipsum, ea, ducimus ut perspiciatis impedit doloribus illum eveniet minima ullam consectetur?'
-	// // 			}
-	// // 		]
-	// // 	}
-	// // ];
-
 	$: active = false;
 
 	const toggleColorPicker = () => {
@@ -124,9 +25,7 @@
 	};
 
 	const setColor = (color: string) => {
-		console.log(color);
 		selectedColor.set(color);
-		// colorStorage.set(color);
 		toggleColorPicker();
 	};
 </script>
@@ -201,13 +100,13 @@
 							></button>
 							<button
 								type="button"
-								class="cursor-pointer w-8 h-8 flex bg-rose-500"
-								on:click={() => setColor('rose')}
+								class="cursor-pointer w-8 h-8 flex bg-stone-500"
+								on:click={() => setColor('stone')}
 							></button>
 							<button
 								type="button"
-								class="cursor-pointer w-8 h-8 flex bg-red-500"
-								on:click={() => setColor('red')}
+								class="cursor-pointer w-8 h-8 flex bg-emerald-500"
+								on:click={() => setColor('emerald')}
 							></button>
 							<button
 								type="button"
@@ -240,5 +139,4 @@
 			</div>
 		</div>
 	</div>
-	<!-- </div> -->
 </div>

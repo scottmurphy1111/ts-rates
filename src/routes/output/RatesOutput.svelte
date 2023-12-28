@@ -10,7 +10,6 @@
 
 	$: rateColHeaders = [
 		'Term / Mileage Limits',
-		// 'Mileage',
 		`${new Date().getFullYear() - 4} &amp; Newer / 0-${ratesheetData.lowMileageCutoff}K`,
 		`${new Date().getFullYear() - 4} &amp; Newer / ${ratesheetData.lowMileageCutoff}K+`,
 		`${new Date().getFullYear() - 5} &amp; Older / 0-${ratesheetData.lowMileageCutoff}K`,
@@ -20,14 +19,17 @@
 	];
 
 	const ratesHeadersCount = (node: HTMLDivElement) => {
-		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(min-content, auto))`;
+		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(200px, auto))`;
 	};
 </script>
 
 <!-- Rates -->
 <h3 class="h3 text-2xl font-semibold mb-2">Rates</h3>
 <div class="card shadow-xl p-8 mb-8">
-	<div class="grid gap-4 justify-items-center" use:ratesHeadersCount>
+	<div
+		class="grid gap-4 justify-items-center grid-flow-dense overflow-x-auto"
+		use:ratesHeadersCount
+	>
 		{#each rateColHeaders as header}
 			<div class="flex flex-col gap-1 text-base font-extrabold text-center">
 				{@html header}

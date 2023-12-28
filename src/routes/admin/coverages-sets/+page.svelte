@@ -11,10 +11,6 @@
 	import { writable, type Writable } from 'svelte/store';
 
 	export let data: PageData;
-	// export let form: ActionData;
-
-	// let selectForm: HTMLFormElement;
-
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 

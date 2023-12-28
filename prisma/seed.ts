@@ -238,18 +238,6 @@ async function main() {
 			}
 		}
 	});
-	// const disclosure1 = await prisma.disclosure.create({
-	// 	data: {
-	// 		title: 'Eligibility',
-	// 		description: 'This is the eligibility disclosure'
-	// 	}
-	// });
-	// const disclosure2 = await prisma.disclosure.create({
-	// 	data: {
-	// 		title: 'Uptime Benefit',
-	// 		description: 'This is the uptime benefit disclosure'
-	// 	}
-	// });
 
 	console.log(`Created the Following Disclosures Set: ${disclosuresSet.name}`);
 	console.log(`Created the Following Coverages Set: ${coveragesSet.name}`);

@@ -1,7 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
-// import path from 'path';
-// import { writeFileSync } from 'fs';
 import { client } from '$lib/server/prisma';
 import type { RatesheetWithIncludes } from '$lib/types/types';
 
@@ -32,7 +30,6 @@ export const actions = {
 	default: async ({ request }) => {
 		const data = await request.formData();
 
-		console.log('data', data);
 		const selectedRatesheetId = data.get('selectedRatesheetId');
 		const markup12 = data.get('markup12');
 		const markup24 = data.get('markup24');
@@ -70,23 +67,6 @@ export const actions = {
 				logoUrl: customLogo as string
 			}
 		});
-
-		// if (!cardTypes || !markup) {
-		// 	return fail(400, { err: 'Cannot create Rate Card Template' });
-		// }
-		// cookies.set('cardTypes', JSON.stringify(cardTypes), { maxAge: 24 * 60 * 60 });
-		// cookies.set('markup', JSON.stringify(markup), { maxAge: 24 * 60 * 60 });
-
-		// if ((customLogo as File).size) {
-		// 	const file = data.get('customLogo') as File;
-		// 	const imageResource = `customLogos/${crypto.randomUUID()}.${file.type.split('/')[1]}`;
-		// 	const filePath = path.join(process.cwd(), 'static', imageResource);
-
-		// 	writeFileSync(filePath, Buffer.from(await file.arrayBuffer()));
-		// 	cookies.set('customLogo', imageResource, { maxAge: 24 * 60 * 60 });
-		// } else {
-		// 	cookies.set('customLogo', '', { maxAge: -1 });
-		// }
 
 		throw redirect(302, `/output?id=${rateOutput.id}`);
 	}

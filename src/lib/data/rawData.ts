@@ -2,7 +2,6 @@ export const rawData = {
 	class_8: {
 		header: {
 			title: 'Class 8 Diesel - Commercial Truck'
-			// subtitle: 'Pricing'
 		},
 		body: {
 			standards: {

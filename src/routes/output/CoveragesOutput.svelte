@@ -5,7 +5,6 @@
 	export let ratesheetData = {} as RatesheetWithIncludes;
 	export let color: string;
 
-	// const colorStorage = localStorageStore('color', 'primary');
 	let colorText = `text-${color}-500`;
 </script>
 

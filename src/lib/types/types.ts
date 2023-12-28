@@ -8,12 +8,6 @@ import type {
 	Coverage
 } from '@prisma/client';
 
-// export type Output = {
-// 	cardTypes: string[];
-// 	markup: string;
-// 	customLogo?: string;
-// };
-
 export type RatesheetWithIncludes = Ratesheet & {
 	rows: Row[];
 	options: Option[];
