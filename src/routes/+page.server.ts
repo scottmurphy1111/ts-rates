@@ -4,7 +4,7 @@ import { client } from '$lib/server/prisma';
 import type { RatesheetWithIncludes } from '$lib/types/types';
 
 export const load = async () => {
-	const ratesheets = await client.ratesheet.findMany({
+	let ratesheets = await client.ratesheet.findMany({
 		include: {
 			rows: true,
 			options: true,
@@ -20,6 +20,12 @@ export const load = async () => {
 			}
 		}
 	});
+
+	console.log('ratesheets', ratesheets);
+	ratesheets = ratesheets.sort((a, b) => {
+		return a.name.localeCompare(b.name);
+	});
+	console.log('ratesheets', ratesheets);
 
 	return {
 		ratesheets: ratesheets as RatesheetWithIncludes[]

@@ -1,8 +1,26 @@
 <script lang="ts">
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import type { RatesheetWithIncludes } from '$lib/types/types';
+	import { onMount } from 'svelte';
+	import type { Markup } from '@prisma/client';
 
 	export let ratesheetData = {} as RatesheetWithIncludes;
+	export let markups = [] as Markup[];
+
+	$: formattedMarkups = markups.reduce(
+		(acc, markup) => {
+			acc[markup.termValue] = {
+				markup: markup.markupValue
+			};
+
+			console.log('acc', acc);
+			return acc;
+		},
+		{} as Record<string, { markup: string }>
+	);
+
+	console.log(markups);
+	$: console.log(formattedMarkups);
 
 	const markupStorage = localStorageStore('markup', 0);
 	const colorStorage = localStorageStore('color', 'primary');
@@ -20,6 +38,11 @@
 
 	const ratesHeadersCount = (node: HTMLDivElement) => {
 		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(200px, auto))`;
+	};
+
+	const calculateMarkup = (termValue: string, cost: string) => {
+		const markup = formattedMarkups[termValue]?.markup ?? 0;
+		return Number(cost) + Number(markup);
 	};
 </script>
 
@@ -43,17 +66,10 @@
 							${new Intl.NumberFormat('en-US', {
 								style: 'decimal',
 								currency: 'USD'
-							}).format(key.startsWith('cost') ? Number(value) + $markupStorage : Number(value))}
+							}).format(
+								key.startsWith('cost') ? calculateMarkup(row.termValue, value) : Number(value)
+							)}
 						</span>
-
-						<!-- {#if key === 'termUnit'}
-          <span class="inline-flex items-baseline gap-1">
-            <select class="input" name={`${key}`} {value}>
-              <option value="days">days</option>
-              <option value="months">months</option>
-            </select>
-          </span>
-        {/if} -->
 					{/if}
 					{#if key === 'termValue'}
 						<span class="inline-flex items-baseline gap-1 text-base font-semibold">

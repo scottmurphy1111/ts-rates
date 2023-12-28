@@ -1,8 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { client } from '$lib/server/prisma';
-import type { RatesheetWithIncludes } from '$lib/types/types';
-import type { RateOutput } from '@prisma/client';
+import type { RateOutputWithIncludes, RatesheetWithIncludes } from '$lib/types/types';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const rateOutputId = url.searchParams.get('id');
@@ -41,7 +40,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	});
 
 	return {
-		output: rateOutputData as RateOutput,
+		output: rateOutputData as RateOutputWithIncludes,
 		ratesheet: ratesheet as RatesheetWithIncludes
 	};
 };

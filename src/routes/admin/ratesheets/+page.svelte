@@ -11,6 +11,7 @@
 	import DisclosuresSets from './DisclosuresSets.svelte';
 	import CoveragesSets from './CoveragesSets.svelte';
 	import type { Row, Option } from '@prisma/client';
+	import { format } from 'date-fns';
 
 	export let data: PageData;
 	$: ({ ratesheets, disclosuresSets, coveragesSets } = data);
@@ -36,6 +37,8 @@
 
 	let emptyRatesheet: RatesheetWithIncludes = {
 		id: 'new',
+		createdAt: new Date(),
+		updatedAt: new Date(),
 		name: '',
 		title: '',
 		subtitle: '',
@@ -204,6 +207,10 @@
 							Delete
 						</button>
 					{/if}
+					<div class="flex flex-col text-xs">
+						<span>Created {format(ratesheet.createdAt, 'MM/dd/yyyy - hh:mm:ss a')}</span>
+						<span>Last Updated {format(ratesheet.updatedAt, 'MM/dd/yyyy - hh:mm:ss a')}</span>
+					</div>
 				</div>
 				<div class="inline-flex gap-2">
 					<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Save</button>

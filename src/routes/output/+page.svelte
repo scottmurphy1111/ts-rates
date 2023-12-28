@@ -47,7 +47,7 @@
 			</header>
 			<main>
 				<div class="flex flex-col gap-4 p-8 text-sm">
-					<RatesOutput ratesheetData={ratesheet} />
+					<RatesOutput ratesheetData={ratesheet} markups={output.markups} />
 					<OptionsOutput ratesheetData={ratesheet} />
 					<DisclosuresOutput ratesheetData={ratesheet} color={output.color} />
 					<CoveragesOutput ratesheetData={ratesheet} color={output.color} />

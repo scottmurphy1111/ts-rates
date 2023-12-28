@@ -5,7 +5,9 @@ import type {
 	DisclosuresSet,
 	Disclosure,
 	CoveragesSet,
-	Coverage
+	Coverage,
+	Markup,
+	RateOutput
 } from '@prisma/client';
 
 export type RatesheetWithIncludes = Ratesheet & {
@@ -20,4 +22,8 @@ export type DisclosuresSetWithIncludes = DisclosuresSet & {
 };
 export type CoveragesSetWithIncludes = CoveragesSet & {
 	coverages: Coverage[];
+};
+
+export type RateOutputWithIncludes = RateOutput & {
+	markups: Markup[];
 };

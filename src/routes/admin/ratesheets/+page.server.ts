@@ -8,7 +8,7 @@ import type {
 
 export const load: PageServerLoad = async ({ depends }) => {
 	depends('data:ratesheets');
-	const ratesheets = await client.ratesheet.findMany({
+	let ratesheets = await client.ratesheet.findMany({
 		include: {
 			rows: true,
 			options: true,
@@ -34,6 +34,12 @@ export const load: PageServerLoad = async ({ depends }) => {
 			coverages: true
 		}
 	});
+
+	console.log('ratesheets', ratesheets);
+	ratesheets = ratesheets.sort((a, b) => {
+		return a.name.localeCompare(b.name);
+	});
+	console.log('ratesheets', ratesheets);
 
 	return {
 		ratesheets: ratesheets as RatesheetWithIncludes[],
