@@ -8,6 +8,8 @@ async function main() {
 	const ratesheet1 = await prisma.ratesheet.create({
 		data: {
 			id: 'class_8',
+			createdAt: new Date(),
+			updatedAt: new Date(),
 			name: 'class_8',
 			title: 'Class 8',
 			subtitle: 'Aftermarket Warranty Pricing',
@@ -82,7 +84,7 @@ async function main() {
 					},
 					{
 						packageName: 'Trans&Diff',
-						termValue: '24',
+						termValue: '48',
 						termUnit: 'months',
 						cost: '975'
 					},
@@ -230,6 +232,8 @@ async function main() {
 	const ratesheet2 = await prisma.ratesheet.create({
 		data: {
 			id: 'class_8_FTL',
+			createdAt: new Date(),
+			updatedAt: new Date(),
 			name: 'class_8_FTL',
 			title: 'Class 8 Freightliner',
 			subtitle: 'Freightliner Exclusive',
@@ -331,6 +335,7 @@ async function main() {
 			id: '1',
 			ratesheetId: 'class_8',
 			color: 'sky',
+			label: 'Test Output',
 			logoUrl:
 				'https://logos-download.com/wp-content/uploads/2016/02/Freightliner-logo-original.png',
 			markups: {

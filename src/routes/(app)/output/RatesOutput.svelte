@@ -28,16 +28,16 @@
 
 	$: rateColHeaders = [
 		'Term / Mileage Limits',
-		`${new Date().getFullYear() - 4} &amp; Newer / 0-${ratesheetData.lowMileageCutoff}K`,
-		`${new Date().getFullYear() - 4} &amp; Newer / ${ratesheetData.lowMileageCutoff}K+`,
-		`${new Date().getFullYear() - 5} &amp; Older / 0-${ratesheetData.lowMileageCutoff}K`,
-		`${new Date().getFullYear() - 5} &amp; Older / ${ratesheetData.lowMileageCutoff}K+`,
+		`${new Date().getFullYear() - 4} &amp; Newer <br /> 0-${ratesheetData.lowMileageCutoff}K`,
+		`${new Date().getFullYear() - 4} &amp; Newer <br /> ${ratesheetData.lowMileageCutoff}K+`,
+		`${new Date().getFullYear() - 5} &amp; Older <br /> 0-${ratesheetData.lowMileageCutoff}K`,
+		`${new Date().getFullYear() - 5} &amp; Older <br /> ${ratesheetData.lowMileageCutoff}K+`,
 		'Deductible',
 		'Aggregate Limit'
 	];
 
 	const ratesHeadersCount = (node: HTMLDivElement) => {
-		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(200px, auto))`;
+		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(min-content, auto))`;
 	};
 
 	const calculateMarkup = (termValue: string, cost: string) => {
@@ -49,10 +49,7 @@
 <!-- Rates -->
 <h3 class="h3 text-2xl font-semibold mb-2">Rates</h3>
 <div class="card shadow-xl p-8 mb-8">
-	<div
-		class="grid gap-4 justify-items-center grid-flow-dense overflow-x-auto"
-		use:ratesHeadersCount
-	>
+	<div class="grid gap-4 justify-items-center grid-flow-dense" use:ratesHeadersCount>
 		{#each rateColHeaders as header}
 			<div class="flex flex-col gap-1 text-base font-extrabold text-center">
 				{@html header}

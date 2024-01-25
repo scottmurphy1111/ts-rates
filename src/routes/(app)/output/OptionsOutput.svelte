@@ -4,6 +4,7 @@
 
 	export let ratesheetData = {} as RatesheetWithIncludes;
 
+	$: console.log(ratesheetData);
 	const colorStorage = localStorageStore('color', 'primary');
 	let colorText = `text-${$colorStorage}-500`;
 
@@ -81,6 +82,9 @@
 		},
 		{} as Record<string, Record<string, string>[]>
 	);
+
+	$: console.log('groupOptionsByPackage', groupOptionsByPackage);
+	$: console.log('groupOptionsByTerm', groupOptionsByTerm);
 
 	$: optionsHeadersCount = (node: HTMLDivElement) => {
 		// get count of non All options plus 1 for empty first column

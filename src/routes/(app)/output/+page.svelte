@@ -24,7 +24,7 @@
 			>
 				<div class="w-2/3 flex gap-4 items-center">
 					{#if output?.logoUrl}
-						<img class="w-1/2" src={output.logoUrl} alt="Custom Logo" />
+						<img class="w-auto max-h-24" src={output.logoUrl} alt="Custom Logo" />
 					{:else}
 						<a href="/">
 							<img class="w-full" src={TsLogoDark} alt="ts-logo-dark" />

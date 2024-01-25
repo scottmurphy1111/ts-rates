@@ -35,11 +35,11 @@ export const load: PageServerLoad = async ({ depends }) => {
 		}
 	});
 
-	console.log('ratesheets', ratesheets);
+	// console.log('ratesheets', ratesheets);
 	ratesheets = ratesheets.sort((a, b) => {
 		return a.name.localeCompare(b.name);
 	});
-	console.log('ratesheets', ratesheets);
+	// console.log('ratesheets', ratesheets);
 
 	return {
 		ratesheets: ratesheets as RatesheetWithIncludes[],

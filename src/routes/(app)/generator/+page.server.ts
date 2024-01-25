@@ -21,11 +21,9 @@ export const load = async () => {
 		}
 	});
 
-	console.log('ratesheets', ratesheets);
 	ratesheets = ratesheets.sort((a, b) => {
 		return a.name.localeCompare(b.name);
 	});
-	console.log('ratesheets', ratesheets);
 
 	return {
 		ratesheets: ratesheets as RatesheetWithIncludes[]
@@ -33,10 +31,12 @@ export const load = async () => {
 };
 
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ request, locals }) => {
+		const userId = locals.session.userId as string;
 		const data = await request.formData();
 
 		const selectedRatesheetId = data.get('selectedRatesheetId');
+		const label = data.get('label');
 		const markup12 = data.get('markup12');
 		const markup24 = data.get('markup24');
 		const markup36 = data.get('markup36');
@@ -65,7 +65,9 @@ export const actions = {
 
 		const rateOutput = await client.rateOutput.create({
 			data: {
+				userId,
 				ratesheetId: selectedRatesheetId as string,
+				label: label as string,
 				markups: {
 					create: markupsData
 				},

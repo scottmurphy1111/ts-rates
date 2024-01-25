@@ -202,7 +202,7 @@
 						<button
 							type="button"
 							on:click={deleteRatesheet}
-							class="btn bg-gradient-to-br variant-filled-error"
+							class="btn bg-gradient-to-br from-error-600 to-error-700 text-white dark:from-error-600 dark:to-error-700"
 						>
 							Delete
 						</button>

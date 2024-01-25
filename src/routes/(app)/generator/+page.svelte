@@ -15,6 +15,7 @@
 	let markup36 = writable(1500);
 	let markup48 = writable(2000);
 	let selectedColor = writable('primary');
+	let label = writable('');
 	const customLogo = writable(null);
 
 	$: colorBg = `bg-${$selectedColor}-500`;
@@ -33,7 +34,7 @@
 <div class="w-full gap-8 flex flex-col p-4 items-center justify-center">
 	<div class="card shadow-xl min-w-1/4 p-8 justify-center items-center">
 		<div class="flex flex-col mb-4 gap-4 items-center justify-center w-full">
-			<a class="flex items-center justify-center max-w-[400px]" href="/">
+			<a class="flex items-center justify-center max-w-[400px]" href="/admin">
 				<img class="block w-full" src={logo} alt="ts-logo" />
 			</a>
 			<h2 class="text-xl text-center p-0">Ratesheet Generator</h2>
@@ -41,7 +42,7 @@
 		<form method="post" use:enhance>
 			<div class="flex flex-col gap-8">
 				<label class="label" for="selectedRatesheetId">
-					Make Selection
+					Select a Ratesheet
 					<select
 						required
 						class="select"
@@ -125,6 +126,10 @@
 							></button>
 						</div>
 					{/if}
+					<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="label">
+						Label (e.g. "Class 8 +1000 for XYZ Dealer")
+						<input type="text" name="label" value={$label} />
+					</label>
 					<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
 						>Link to a Custom Logo (Optional)
 						<input class="input" type="text" name="customLogo" bind:value={$customLogo} />

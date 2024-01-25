@@ -18,7 +18,7 @@ model Ratesheet {
   updatedAt        DateTime        @updatedAt
   name             String          @unique
   title            String
-  subtitle         String
+  subtitle         String          @db.Text
   lowMileageCutoff String?
   rows             Row[]
   options          Option[]
@@ -100,6 +100,8 @@ model Coverage {
 model RateOutput {
   id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
+  userId      String   @default("")
+  label       String   @default("")
   ratesheetId String
   markups     Markup[]
   color       String   @default("primary")

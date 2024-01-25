@@ -6,7 +6,14 @@ import type { PrismaClient } from '@prisma/client';
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			session:
+				| {
+						userId: string;
+						claims: unknown;
+				  }
+				| undefined;
+		}
 		// interface PageData {}
 		// interface Platform {}
 	}
