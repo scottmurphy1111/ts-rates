@@ -39,7 +39,7 @@
 						{ratesheet?.subtitle}
 					</h3>
 					{#if output?.logoUrl}
-						<a class="" href="/">
+						<a href="/">
 							<img class="w-2/5 mt-4" src={TsLogoDark} alt="ts-logo-dark" />
 						</a>
 					{/if}
@@ -47,8 +47,8 @@
 			</header>
 			<main>
 				<div class="flex flex-col gap-4 p-8 text-sm">
-					<RatesOutput ratesheetData={ratesheet} markups={output.markups} />
-					<OptionsOutput ratesheetData={ratesheet} />
+					<RatesOutput ratesheetData={ratesheet} markups={output.markups} color={output.color} />
+					<OptionsOutput ratesheetData={ratesheet} color={output.color} />
 					<DisclosuresOutput ratesheetData={ratesheet} color={output.color} />
 					<CoveragesOutput ratesheetData={ratesheet} color={output.color} />
 				</div>

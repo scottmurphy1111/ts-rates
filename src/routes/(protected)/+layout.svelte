@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { AppShell, Modal, Toast } from '@skeletonlabs/skeleton';
-	import '../../app.postcss';
 	import SpinnerIcon from '$lib/assets/icons/spinner.svelte';
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';

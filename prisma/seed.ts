@@ -114,7 +114,25 @@ async function main() {
 					},
 					{
 						packageName: 'APU',
-						termValue: 'All',
+						termValue: '12',
+						termUnit: 'months',
+						cost: '500'
+					},
+					{
+						packageName: 'APU',
+						termValue: '24',
+						termUnit: 'months',
+						cost: '500'
+					},
+					{
+						packageName: 'APU',
+						termValue: '36',
+						termUnit: 'months',
+						cost: '500'
+					},
+					{
+						packageName: 'APU',
+						termValue: '48',
 						termUnit: 'months',
 						cost: '500'
 					}
@@ -333,6 +351,7 @@ async function main() {
 	const rateOutput = await prisma.rateOutput.create({
 		data: {
 			id: '1',
+			userId: '1',
 			ratesheetId: 'class_8',
 			color: 'sky',
 			label: 'Test Output',

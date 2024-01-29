@@ -7,13 +7,9 @@
 	import { onMount } from 'svelte';
 	import SpinnerIcon from '$lib/assets/icons/spinner.svelte';
 
-	$: console.log('modeCurrent', $modeCurrent);
-
 	$: patternStyle = $modeCurrent
 		? `background-image: url('${pattern}')`
 		: `background-image: url('${dark}')`;
-
-	$: console.log('patternStyle', patternStyle);
 
 	onMount(() => {
 		modeCurrent.set(true);
