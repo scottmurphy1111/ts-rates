@@ -1,14 +1,11 @@
 <script lang="ts">
 	import ClerkLoaded from 'clerk-sveltekit/client/ClerkLoaded.svelte';
 	import ClerkLoading from 'clerk-sveltekit/client/ClerkLoading.svelte';
-	import type { LayoutData } from '../$types';
 	import SpinnerIcon from '$lib/assets/icons/spinner.svelte';
-
-	export let data: LayoutData;
 </script>
 
 <ClerkLoading>
-	<div class="flex absolute w-screen h-screen top-0 justify-center items-center z-20">
+	<div class="flex fixed w-screen h-screen top-0 justify-center items-center z-20">
 		<div class="w-8 z-10 relative">
 			<svelte:component this={SpinnerIcon} />
 		</div>

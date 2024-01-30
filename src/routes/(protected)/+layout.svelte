@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { AppShell, Modal, Toast } from '@skeletonlabs/skeleton';
+	import { AppShell } from '@skeletonlabs/skeleton';
 	import SpinnerIcon from '$lib/assets/icons/spinner.svelte';
-	import { initializeStores } from '@skeletonlabs/skeleton';
-	import { writable } from 'svelte/store';
-	import { setContext } from 'svelte';
 	import TsAppBar from '$lib/components/TsAppBar.svelte';
 	import TsFooter from '$lib/components/TsFooter.svelte';
 	import pattern from '$lib/assets/images/pattern.svg';
@@ -15,30 +12,15 @@
 	$: patternStyle = $modeCurrent
 		? `background-image: url('${pattern}')`
 		: `background-image: url('${dark}')`;
-
-	const pendingStore = writable<boolean>(false);
-	setContext('pendingStore', pendingStore);
-
-	initializeStores();
 </script>
 
-{#if $pendingStore}
-	<div class="flex absolute w-screen h-screen top-0 justify-center items-center z-20">
-		<div class="w-8 z-10 relative">
-			<svelte:component this={SpinnerIcon} />
-		</div>
-		<div class="bg-surface-500 opacity-50 w-full h-full absolute top-0 left-0"></div>
-	</div>
-{/if}
-<Toast />
-<Modal />
 <AppShell slotPageContent="bg-center bg-repeat bg-size-sm bg-surface-50-900-token">
 	<svelte:fragment slot="header">
 		<TsAppBar />
 	</svelte:fragment>
 
 	<ClerkLoading>
-		<div class="flex absolute w-screen h-screen top-0 justify-center items-center z-20">
+		<div class="flex fixed w-screen h-screen top-0 justify-center items-center z-20">
 			<div class="w-8 z-10 relative">
 				<svelte:component this={SpinnerIcon} />
 			</div>

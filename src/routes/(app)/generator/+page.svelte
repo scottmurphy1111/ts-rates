@@ -4,10 +4,13 @@
 	import { writable, type Writable } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
+	import { getContext } from 'svelte';
 
 	export let data: PageData;
 
 	const { ratesheets } = data;
+
+	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
 	let selectedRatesheetId = writable(ratesheets?.[0]?.id ?? '');
 	let markup12 = writable(500);
@@ -39,7 +42,15 @@
 			</a>
 			<h2 class="text-xl text-center p-0">Ratesheet Generator</h2>
 		</div>
-		<form method="post" use:enhance>
+		<form
+			method="post"
+			use:enhance={() => {
+				pendingStore.set(true);
+				return async ({ update }) => {
+					await update();
+				};
+			}}
+		>
 			<div class="flex flex-col gap-8">
 				<label class="label" for="selectedRatesheetId">
 					Select a Ratesheet

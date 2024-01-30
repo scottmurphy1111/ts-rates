@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import type { RatesheetWithIncludes } from '$lib/types/types';
 
 	export let ratesheetData = {} as RatesheetWithIncludes;

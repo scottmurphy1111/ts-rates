@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import UpIcon from '$lib/assets/icons/up.svelte';
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
 	import DeleteIcon from '$lib/assets/icons/delete.svelte';
 	import { getModalStore, getToastStore } from '@skeletonlabs/skeleton';
 	import { invalidate } from '$app/navigation';
@@ -267,47 +266,6 @@
 	</div>
 {/if}
 
-<!-- <form
-	method="POST"
-	action="?/selectCoveragesSet"
-	bind:this={selectForm}
-	use:enhance={() => {
-		return async ({ update }) => {
-			await update();
-			emptyCoveragesSet = {
-				id: `new ${generateRandomUuid()}`,
-				name: '',
-				coverages: []
-			};
-		};
-	}}
->
-	<div class="flex gap-2 p-8">
-		<div class="flex flex-col w-full">
-			<label for="selectedCoveragesSetId" class="label">Coverage Sets</label>
-			<select
-				class="select"
-				name="selectedCoveragesSetId"
-				on:change={() => selectForm.submit()}
-				bind:value={selectedCoverageSet}
-			>
-				{#if coveragesSets}
-					<option value disabled>Make a selection</option>
-					{#each coveragesSets as set}
-						<option value={set.id} selected={set.id === coveragesSet?.id}>
-							{set.name}
-						</option>
-					{/each}
-				{/if}
-			</select>
-		</div>
-	</div>
-</form> -->
-<!-- {#if !coveragesSet}
-	<div class="flex px-8">
-		
-	</div>
-{/if} -->
 <div class="flex flex-col gap-4 px-8">
 	{#if coveragesSet}
 		<form class="flex flex-col gap-3" on:submit|preventDefault={handleSave} method="POST">

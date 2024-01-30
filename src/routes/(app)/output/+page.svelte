@@ -8,12 +8,34 @@
 	import DisclosuresOutput from './DisclosuresOutput.svelte';
 	import CoveragesOutput from './CoveragesOutput.svelte';
 	import type { PageData } from './$types';
+	import PrintInstructions from '$lib/assets/images/print-instructions.png';
+	import InfoCircleIcon from '$lib/assets/icons/info-circle.svelte';
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { getContext, onMount } from 'svelte';
+	import type { Writable } from 'svelte/store';
+
+	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
 	export let data: PageData;
 
 	$: ({ output, ratesheet } = data);
 	$: colorFrom = `from-${output?.color}-500`;
 	$: colorTo = `to-${output?.color}-900`;
+
+	const modalStore = getModalStore();
+
+	const modal: ModalSettings = {
+		type: 'component',
+		component: 'modalImage',
+		image: PrintInstructions
+	};
+	function openInstructions() {
+		modalStore.trigger(modal);
+	}
+
+	onMount(() => {
+		pendingStore.set(false);
+	});
 </script>
 
 {#if ratesheet && output}
@@ -31,13 +53,20 @@
 						</a>
 					{/if}
 				</div>
-				<div class="w-1/3 ml-auto">
-					<h2 class="h2">
+				<div class="w-1/3 ml-auto relative">
+					<button class="flex right-4 -top-6 text-xs absolute" on:click={openInstructions}
+						><span class="flex w-4 h-4 mr-2">
+							<svelte:component this={InfoCircleIcon} />
+						</span>
+						Print Instructions</button
+					>
+					<h2 class="h2 flex">
 						{ratesheet?.title}
 					</h2>
 					<h3 class="h3 font-semibold">
 						{ratesheet?.subtitle}
 					</h3>
+
 					{#if output?.logoUrl}
 						<a href="/">
 							<img class="w-2/5 mt-4" src={TsLogoDark} alt="ts-logo-dark" />

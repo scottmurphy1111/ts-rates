@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import type { RatesheetWithIncludes } from '$lib/types/types';
-	import { onMount } from 'svelte';
 	import type { Markup } from '@prisma/client';
 
 	export let ratesheetData = {} as RatesheetWithIncludes;
@@ -18,10 +16,6 @@
 		},
 		{} as Record<string, { markup: string }>
 	);
-
-	const markupStorage = localStorageStore('markup', 0);
-	const colorStorage = localStorageStore('color', 'primary');
-	let colorText = `text-${$colorStorage}-500`;
 
 	$: rateColHeaders = [
 		'Term / Mileage Limits',

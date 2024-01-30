@@ -17,7 +17,7 @@
 </script>
 
 <ClerkLoading>
-	<div class="flex absolute w-screen h-screen top-0 justify-center items-center z-20">
+	<div class="flex fixed w-screen h-screen top-0 justify-center items-center z-20">
 		<div class="w-8 z-10 relative">
 			<svelte:component this={SpinnerIcon} />
 		</div>

@@ -1,4 +1,4 @@
-import type { LayoutServerLoad } from '../$types';
+import type { LayoutServerLoad } from './$types';
 import { clerkClient } from '$lib/server/clerk';
 import type { User } from '@clerk/clerk-sdk-node';
 

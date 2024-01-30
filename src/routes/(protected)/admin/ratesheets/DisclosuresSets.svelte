@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
 	import type { DisclosuresSetWithIncludes, RatesheetWithIncludes } from '$lib/types/types';
 
 	export let ratesheet: RatesheetWithIncludes | null = null;
@@ -7,8 +6,6 @@
 
 	$: selectedDisclosureSetId = ratesheet?.disclosuresSetId ?? undefined;
 </script>
-
-<!-- else content here -->
 
 <div class="flex flex-col gap-2">
 	<h2 class="h2">Disclosures Set</h2>
@@ -18,7 +15,6 @@
 	{:else}
 		<div>
 			<div class="flex flex-col w-full">
-				<!-- <label for="selectedDisclosuresSetId" class="label">Disclosure Sets</label> -->
 				<select class="select" name="selectedDisclosuresSetId" value={selectedDisclosureSetId}>
 					{#if disclosuresSets}
 						<option value disabled>Make a selection</option>

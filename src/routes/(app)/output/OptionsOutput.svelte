@@ -1,12 +1,8 @@
 <script lang="ts">
-	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import type { RatesheetWithIncludes } from '$lib/types/types';
 
 	export let ratesheetData = {} as RatesheetWithIncludes;
 	export let color: string;
-
-	const colorStorage = localStorageStore('color', 'primary');
-	let colorText = `text-${$colorStorage}-500`;
 
 	$: groupOptionsByPackage = ratesheetData?.options?.reduce(
 		(acc, option) => {

@@ -32,7 +32,7 @@ export const load = async () => {
 
 export const actions = {
 	default: async ({ request, locals }) => {
-		const userId = locals.session.userId as string;
+		const userId = locals.session?.userId as string;
 		const data = await request.formData();
 
 		const selectedRatesheetId = data.get('selectedRatesheetId');

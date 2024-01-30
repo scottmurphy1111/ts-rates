@@ -15,3 +15,23 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	return json(rateOutput);
 };
+
+export const DELETE: RequestHandler = async ({ url }) => {
+	const id = url.searchParams.get('id');
+
+	const deleteMarkups = client.markup.deleteMany({
+		where: {
+			rateOutputId: id as string
+		}
+	});
+
+	const rateOutput = client.rateOutput.delete({
+		where: {
+			id: id as string
+		}
+	});
+
+	await client.$transaction([deleteMarkups, rateOutput]);
+
+	return json({ message: '👍 Rate Output deleted successfully' });
+};
