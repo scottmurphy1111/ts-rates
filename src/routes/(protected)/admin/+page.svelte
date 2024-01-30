@@ -13,8 +13,11 @@
 
 {#if data.userData}
 	<div class="flex flex-col p-8">
-		<h2 class="h2 mb-4">Admin</h2>
-		<div class="w-full flex flex-col md:flex-row items-start">
+		<div class="flex mb-4 gap-8 justify-between">
+			<h2 class="h2 w-1/2">Admin</h2>
+			<p class="italic text-sm w-1/2">My Generated Ratesheets</p>
+		</div>
+		<div class="w-full flex flex-col gap-8 md:flex-row items-start">
 			<div class="w-full md:w-1/2 flex gap-4 flex-wrap">
 				<a
 					class="card card-hover shadow-md p-8 flex flex-col gap-4 w-full md:max-w-screen-md h-min"
@@ -69,14 +72,13 @@
 					>
 				{/if}
 			</div>
-			<div class="flex flex-col w-full md:w-1/2 gap-4 p-4">
-				<p class="italic text-sm">Previous Output</p>
+			<div class="flex flex-col w-full md:w-1/2 gap-4">
 				<div class="grid grid-cols-3 gap-4 place-content-center">
 					<span class="font-semibold">Link</span>
 					<span class="font-semibold">Created</span>
 					<span></span>
 					{#each rateOutput as output}
-						<a class="text-primary-500" href={`/output?id=${output.id}`}>
+						<a class="flex text-primary-500 items-center" href={`/output?id=${output.id}`}>
 							{output.label ? output.label : 'No Label'}
 						</a>
 						<div class="flex gap-2 justify-between items-center">
