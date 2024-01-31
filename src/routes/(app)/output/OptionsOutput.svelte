@@ -12,7 +12,8 @@
 					{
 						termValue: option.termValue,
 						termUnit: option.termUnit,
-						cost: option.cost
+						cost: option.cost,
+						refrigerationHours: option.refrigerationHours as string
 					}
 				];
 			} else {
@@ -21,7 +22,8 @@
 					{
 						termValue: option.termValue,
 						termUnit: option.termUnit,
-						cost: option.cost
+						cost: option.cost,
+						refrigerationHours: option.refrigerationHours as string
 					}
 				];
 			}
@@ -41,7 +43,8 @@
 						packageName: option.packageName,
 						termValue: option.termValue,
 						termUnit: option.termUnit,
-						cost: option.cost
+						cost: option.cost,
+						refrigerationHours: option.refrigerationHours as string
 					}
 				];
 			} else {
@@ -51,7 +54,8 @@
 						packageName: option.packageName,
 						termValue: option.termValue,
 						termUnit: option.termUnit,
-						cost: option.cost
+						cost: option.cost,
+						refrigerationHours: option.refrigerationHours as string
 					}
 				];
 			}
@@ -133,12 +137,17 @@
 						</div>
 					{/if}
 					<div
-						class="inline-flex items-baseline text-base font-semibold bg-white min-w-full h-full p-2"
+						class="inline-flex text-base font-semibold bg-white min-w-full h-full p-2 justify-between items-center"
 					>
 						${new Intl.NumberFormat('en-US', {
 							style: 'decimal',
 							currency: 'USD'
 						}).format(Number(option.cost))}
+						{#if option.refrigerationHours}
+							<span class="text-xs font-normal text-gray-500"
+								>{option.refrigerationHours}k hours</span
+							>
+						{/if}
 					</div>
 				{/each}
 			{/if}

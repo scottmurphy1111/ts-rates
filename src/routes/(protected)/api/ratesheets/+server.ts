@@ -50,6 +50,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const optionTermValues = formData.getAll('optionTermValue');
 	const optionTermUnits = formData.getAll('optionTermUnit');
 	const optionCosts = formData.getAll('optionCost');
+	const optionRefrigerationHours = formData.getAll('optionRefrigerationHours');
 	const selectedDisclosuresSetId = formData.get('selectedDisclosuresSetId');
 	const selectedCoveragesSetId = formData.get('selectedCoveragesSetId');
 
@@ -82,7 +83,8 @@ export const POST: RequestHandler = async ({ request }) => {
 					packageName: optionPackageNames[i] as string,
 					termValue: optionTermValues[i] as string,
 					termUnit: optionTermUnits[i] as string,
-					cost: optionCosts[i] as string
+					cost: optionCosts[i] as string,
+					refrigerationHours: optionRefrigerationHours[i] as string
 				}
 			};
 
@@ -136,7 +138,8 @@ export const POST: RequestHandler = async ({ request }) => {
 						packageName: optionValues.packageName as string,
 						termValue: optionValues.termValue as string,
 						termUnit: optionValues.termUnit as string,
-						cost: optionValues.cost as string
+						cost: optionValues.cost as string,
+						refrigerationHours: optionValues.refrigerationHours as string
 					};
 				})
 			}
@@ -213,6 +216,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				termValue: optionValues.termValue as string,
 				termUnit: optionValues.termUnit as string,
 				cost: optionValues.cost as string,
+				refrigerationHours: optionValues.refrigerationHours as string,
 				ratesheet: {
 					connect: {
 						id: ratesheetId as string
@@ -224,6 +228,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				termValue: optionValues.termValue as string,
 				termUnit: optionValues.termUnit as string,
 				cost: optionValues.cost as string,
+				refrigerationHours: optionValues.refrigerationHours as string,
 				ratesheet: {
 					connect: {
 						id: ratesheetId as string
