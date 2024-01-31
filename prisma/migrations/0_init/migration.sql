@@ -43,6 +43,7 @@ CREATE TABLE `Option` (
     `termUnit` VARCHAR(191) NOT NULL,
     `cost` VARCHAR(191) NOT NULL,
     `ratesheetId` VARCHAR(191) NOT NULL,
+    `refrigerationHours` VARCHAR(191) NULL DEFAULT '',
 
     INDEX `Option_ratesheetId_idx`(`ratesheetId`),
     PRIMARY KEY (`id`)
@@ -111,3 +112,4 @@ CREATE TABLE `Markup` (
     INDEX `Markup_rateOutputId_idx`(`rateOutputId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+

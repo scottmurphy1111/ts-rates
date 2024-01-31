@@ -53,7 +53,7 @@
 			</div>
 		{/each}
 		{#if ratesheetData?.rows}
-			{#each ratesheetData.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue)) as row, k}
+			{#each ratesheetData.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue) || Number(a.mileageValue) - Number(b.mileageValue)) as row, k}
 				{#each Object.entries(row) as [key, value], i}
 					{#if i !== 0 && key !== 'termValue' && key !== 'termUnit' && key !== 'mileageValue' && key !== 'ratesheetId' && typeof value === 'string'}
 						<div

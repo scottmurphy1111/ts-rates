@@ -1,15 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
 datasource db {
   provider          = "mysql"
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("DATABASE_URL_DEV")
   relationMode      = "prisma"
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model Ratesheet {
@@ -20,14 +17,14 @@ model Ratesheet {
   title            String
   subtitle         String          @db.Text
   lowMileageCutoff String?
+  disclosuresSetId String?
+  coveragesSetId   String?
   rows             Row[]
   options          Option[]
-  disclosuresSetId String?
   disclosuresSet   DisclosuresSet? @relation(fields: [disclosuresSetId], references: [id])
-  coveragesSetId   String?
   coveragesSet     CoveragesSet?   @relation(fields: [coveragesSetId], references: [id])
 
-  @@index(name)
+  @@index([name])
   @@index([disclosuresSetId])
   @@index([coveragesSetId])
 }
@@ -50,13 +47,14 @@ model Row {
 }
 
 model Option {
-  id          String    @id @default(uuid())
-  packageName String
-  termValue   String
-  termUnit    String
-  cost        String
-  ratesheetId String
-  ratesheet   Ratesheet @relation(fields: [ratesheetId], references: [id])
+  id                 String    @id @default(uuid())
+  packageName        String
+  termValue          String
+  termUnit           String
+  cost               String
+  ratesheetId        String
+  refrigerationHours String?   @default("")
+  ratesheet          Ratesheet @relation(fields: [ratesheetId], references: [id])
 
   @@index([ratesheetId])
 }
@@ -103,9 +101,9 @@ model RateOutput {
   userId      String   @default("")
   label       String   @default("")
   ratesheetId String
-  markups     Markup[]
   color       String   @default("primary")
   logoUrl     String?
+  markups     Markup[]
 }
 
 model Markup {

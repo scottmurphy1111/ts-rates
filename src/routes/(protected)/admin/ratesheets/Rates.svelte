@@ -112,7 +112,7 @@
 			{/each}
 		{/if}
 		{#if ratesheet?.rows}
-			{#each ratesheet.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue)) as row, k}
+			{#each ratesheet.rows.sort((a, b) => Number(a.termValue) - Number(b.termValue) || Number(a.mileageValue) - Number(b.mileageValue)) as row, k}
 				<input type="hidden" name="rowId" value={row.id} style="display:none" />
 				{#each Object.entries(row) as [key, value], i}
 					{#if i !== 0}

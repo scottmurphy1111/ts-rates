@@ -10,6 +10,67 @@
 
 	export let ratesheet: RatesheetWithIncludes | null = null;
 
+	$: console.log('options b4', ratesheet?.options);
+
+	ratesheet?.options.sort((a, b) =>
+		a.packageName > b.packageName
+			? 1
+			: a.packageName < b.packageName
+			  ? -1
+			  : 0 || Number(a.termValue) - Number(b.termValue)
+	);
+
+	$: console.log('options', ratesheet?.options);
+
+	$: groupOptionsByTerm = ratesheet?.options?.reduce(
+		(acc, option) => {
+			const key = option.termValue;
+			if (!acc[key]) {
+				acc[key] = [
+					{
+						packageName: option.packageName,
+						termValue: option.termValue,
+						termUnit: option.termUnit,
+						cost: option.cost
+					}
+				];
+			} else {
+				acc[key] = [
+					...acc[key],
+					{
+						packageName: option.packageName,
+						termValue: option.termValue,
+						termUnit: option.termUnit,
+						cost: option.cost
+					}
+				];
+			}
+
+			acc[key] = acc[key].sort((a, b) => Number(a.termValue) - Number(b.termValue));
+			// console.log('acc b4', acc);
+			acc = Object.entries(acc).reduce(
+				(acc, [key, value]) => {
+					acc[key] = value.sort((a, b) => {
+						if (a.packageName > b.packageName) {
+							return 1;
+						}
+						if (a.packageName < b.packageName) {
+							return -1;
+						}
+						return 0;
+					});
+
+					return acc;
+				},
+				{} as Record<string, Record<string, string>[]>
+			);
+
+			// console.log('acc', acc);
+			return acc;
+		},
+		{} as Record<string, Record<string, string>[]>
+	);
+
 	const toastStore = getToastStore();
 	const modalStore = getModalStore();
 
@@ -95,7 +156,11 @@
 			{/each}
 		{/if}
 		{#if ratesheet?.options}
-			{#each ratesheet.options as option, i}
+			{#each ratesheet.options.sort((a, b) => {
+				// console.log('a tv', a.termValue, 'b', b.termValue);
+				// console.log('a pn', a.packageName, 'b', b.packageName);
+				return Number(a.termValue) - Number(b.termValue) || Number(a.packageName) - Number(b.packageName);
+			}) as option, i}
 				<input hidden name="optionId" value={option.id} />
 				<select class="select" name={`optionPackageName`} value={option.packageName}>
 					{#each optionPackages as oPackage}

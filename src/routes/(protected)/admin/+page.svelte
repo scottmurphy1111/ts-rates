@@ -77,7 +77,7 @@
 					<span class="font-semibold">Link</span>
 					<span class="font-semibold">Created</span>
 					<span></span>
-					{#each rateOutput as output}
+					{#each rateOutput.sort((a, b) => Number(b.createdAt) - Number(a.createdAt)) as output}
 						<a class="flex text-primary-500 items-center" href={`/output?id=${output.id}`}>
 							{output.label ? output.label : 'No Label'}
 						</a>
