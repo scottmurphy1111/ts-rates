@@ -13,8 +13,8 @@
 
 {#if data.userData}
 	<div class="flex flex-col p-8">
-		<div class="flex mb-4 gap-8 justify-between">
-			<h2 class="h2 w-1/2">Admin</h2>
+		<div class="flex mb-4 gap-8 justify-between items-center">
+			<h2 class="h2 w-1/2">Dashboard</h2>
 			<p class="italic text-sm w-1/2">My Generated Ratesheets</p>
 		</div>
 		<div class="w-full flex flex-col gap-8 md:flex-row items-start">
