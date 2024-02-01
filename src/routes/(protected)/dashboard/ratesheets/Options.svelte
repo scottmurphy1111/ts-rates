@@ -43,6 +43,10 @@
 		});
 	};
 
+	const focus = (node: HTMLSelectElement) => {
+		node.focus();
+	};
+
 	const emptyPackage = writable('');
 
 	const deleteRow = (id?: string, ratesheetId?: string) => {
@@ -142,6 +146,7 @@
 				name={`optionPackageName`}
 				value={$emptyOptionsRowStore.packageName}
 				on:change={(val) => emptyPackage.set(val.currentTarget?.value)}
+				use:focus
 			>
 				{#each optionPackages as oPackage}
 					<option value={oPackage}>{oPackage}</option>

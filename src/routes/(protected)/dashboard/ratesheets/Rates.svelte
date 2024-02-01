@@ -59,6 +59,10 @@
 		});
 	};
 
+	const focus = (node: HTMLInputElement) => {
+		node.focus();
+	};
+
 	const deleteRow = (id?: string, ratesheetId?: string) => {
 		pendingStore.set(true);
 		if (id === undefined) {
@@ -154,7 +158,10 @@
 		{#if $emptyRatesRowStore}
 			<input type="hidden" name="rowId" value={$emptyRatesRowStore?.id} style="display:none" />
 			{#each Object.entries($emptyRatesRowStore) as [key, value], i}
-				{#if key !== 'termUnit' && key !== 'ratesheetId' && key !== 'id' && typeof value === 'string'}
+				{#if key === 'termValue'}
+					<input size={10} class="input" type="text" name={`${key}`} {value} use:focus />
+				{/if}
+				{#if key !== 'termUnit' && key !== 'termValue' && key !== 'ratesheetId' && key !== 'id' && typeof value === 'string'}
 					<span class="inline-flex items-baseline gap-1">
 						<input
 							size={key === 'mileageValue' ? 3 : 10}

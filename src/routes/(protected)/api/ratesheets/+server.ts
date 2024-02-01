@@ -271,7 +271,6 @@ export const POST: RequestHandler = async ({ request }) => {
 	await client.$transaction(updateRows);
 	await client.$transaction(updateOptions);
 
-	console.log('ratesheetId', ratesheetId);
 	if (ratesheetId === 'new') {
 		return json(null);
 	}
