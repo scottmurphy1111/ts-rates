@@ -11,10 +11,20 @@ import type {
 } from '@prisma/client';
 
 export type RatesheetWithIncludes = Ratesheet & {
-	rows: Row[];
+	rows: RowWithOptionals[];
 	options: Option[];
 	disclosuresSet: DisclosuresSetWithIncludes;
 	coveragesSet: CoveragesSetWithIncludes;
+};
+
+export type RowWithOptionals = Omit<
+	Row,
+	'truckType' | 'costNewerHighMiles' | 'costOlderLowMiles' | 'costOlderHighMiles'
+> & {
+	truckType?: string | null;
+	costNewerHighMiles?: string | null;
+	costOlderLowMiles?: string | null;
+	costOlderHighMiles?: string | null;
 };
 
 export type DisclosuresSetWithIncludes = DisclosuresSet & {

@@ -35,6 +35,8 @@
 
 	$: lowMileageCutoff = ratesheet?.lowMileageCutoff ?? '600';
 
+	$: isVocational = ratesheet?.isVocational ?? false;
+
 	let emptyRatesheet: RatesheetWithIncludes = {
 		id: 'new',
 		createdAt: new Date(),
@@ -43,6 +45,7 @@
 		title: '',
 		subtitle: '',
 		lowMileageCutoff: '',
+		isVocational: false,
 		rows: [],
 		options: [],
 		disclosuresSetId: '',
@@ -223,48 +226,62 @@
 					</button>
 				</div>
 			</div>
-			<div class="flex gap-4 items-end">
-				<label for="title" class="label"
-					>Title
-					<input class="input" type="text" name="title" value={ratesheet.title} />
-				</label>
-				<label for="subtitle" class="label w-full"
-					>Subtitle
-					<input class="input" type="text" name="subtitle" value={ratesheet.subtitle} />
-				</label>
-				<label for="lowMileageCutoff" class="label flex flex-col"
-					>Low Mileage Cutoff
-					<span class="inline-flex items-baseline gap-1">
+			<div class="flex flex-col gap-4">
+				<div class="flex gap-4 items-end">
+					<label for="title" class="label"
+						>Title
+						<input class="input" type="text" name="title" value={ratesheet.title} />
+					</label>
+					<label for="subtitle" class="label w-full"
+						>Subtitle
+						<input class="input" type="text" name="subtitle" value={ratesheet.subtitle} />
+					</label>
+					<label for="lowMileageCutoff" class="label flex flex-col"
+						>Low Mileage Cutoff
+						<span class="inline-flex items-baseline gap-1">
+							<input
+								class="input"
+								type="text"
+								name="lowMileageCutoff"
+								bind:value={ratesheet.lowMileageCutoff}
+								size="3"
+							/>
+							<span>000</span>
+						</span>
+					</label>
+				</div>
+				<div class="mb-16">
+					<label for="isVocational" class="label flex gap-4 items-center">
 						<input
-							class="input"
-							type="text"
-							name="lowMileageCutoff"
-							bind:value={ratesheet.lowMileageCutoff}
-							size="3"
+							type="checkbox"
+							class="checkbox"
+							bind:checked={ratesheet.isVocational}
+							name="isVocational"
+							value={ratesheet.isVocational}
 						/>
-						<span>000</span>
-					</span>
-				</label>
-			</div>
+						Is Vocational and / or Appartus?
+					</label>
+				</div>
 
-			<div class="flex flex-col gap-24">
-				<Rates {ratesheet} {lowMileageCutoff} />
-				<Options {ratesheet} />
-				<DisclosuresSets {ratesheet} {disclosuresSets} />
-				<CoveragesSets {ratesheet} {coveragesSets} />
-			</div>
-			<div
-				class="flex gap-2 justify-end sticky top-0 bg-surface-50-900-token z-10 px-8 py-4 -mx-8 border-surface-100-800-token"
-			>
-				<div class="inline-flex gap-2">
-					<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Save</button>
-					<button
-						type="button"
-						on:click={clearRatesheet}
-						class="btn bg-gradient-to-br variant-filled-tertiary"
-					>
-						Cancel
-					</button>
+				<div class="flex flex-col gap-24">
+					<Rates {ratesheet} {lowMileageCutoff} {isVocational} />
+					<Options {ratesheet} />
+					<DisclosuresSets {ratesheet} {disclosuresSets} />
+					<CoveragesSets {ratesheet} {coveragesSets} />
+				</div>
+				<div
+					class="flex gap-2 justify-end sticky top-0 bg-surface-50-900-token z-10 px-8 py-4 -mx-8 border-surface-100-800-token"
+				>
+					<div class="inline-flex gap-2">
+						<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Save</button>
+						<button
+							type="button"
+							on:click={clearRatesheet}
+							class="btn bg-gradient-to-br variant-filled-tertiary"
+						>
+							Cancel
+						</button>
+					</div>
 				</div>
 			</div>
 		</form>

@@ -17,6 +17,7 @@ model Ratesheet {
   title            String
   subtitle         String          @db.Text
   lowMileageCutoff String?
+  isVocational     Boolean?        @default(false)
   disclosuresSetId String?
   coveragesSetId   String?
   rows             Row[]
@@ -35,11 +36,12 @@ model Row {
   termUnit           String
   mileageValue       String
   costNewerLowMiles  String
-  costNewerHighMiles String
-  costOlderLowMiles  String
-  costOlderHighMiles String
+  costNewerHighMiles String?
+  costOlderLowMiles  String?
+  costOlderHighMiles String?
   deductible         String
   aggregateLimit     String
+  truckType          String?
   ratesheetId        String
   ratesheet          Ratesheet @relation(fields: [ratesheetId], references: [id])
 

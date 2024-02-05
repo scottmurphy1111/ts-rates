@@ -5,6 +5,9 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import { getContext } from 'svelte';
+	import InfoCircleIcon from '$lib/assets/icons/info-circle.svelte';
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import CustomLogoInstructions from '$lib/assets/images/custom-logo-instructions.png';
 
 	export let data: PageData;
 
@@ -13,10 +16,10 @@
 	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
 	let selectedRatesheetId = writable(ratesheets?.[0]?.id ?? '');
-	let markup12 = writable(500);
-	let markup24 = writable(1000);
-	let markup36 = writable(1500);
-	let markup48 = writable(2000);
+	let markup12 = writable(0);
+	let markup24 = writable(0);
+	let markup36 = writable(0);
+	let markup48 = writable(0);
 	let selectedColor = writable('primary');
 	let label = writable('');
 	const customLogo = writable(null);
@@ -32,6 +35,18 @@
 		selectedColor.set(color);
 		toggleColorPicker();
 	};
+
+	const modalStore = getModalStore();
+
+	const modal: ModalSettings = {
+		type: 'component',
+		component: 'modalImage',
+		image: CustomLogoInstructions
+	};
+
+	function openInstructions() {
+		modalStore.trigger(modal);
+	}
 </script>
 
 <div class="w-full gap-8 flex flex-col p-4 items-center justify-center">
@@ -53,7 +68,7 @@
 		>
 			<div class="flex flex-col gap-8">
 				<label class="label" for="selectedRatesheetId">
-					Select a Ratesheet
+					*Select a Ratesheet
 					<select
 						required
 						class="select"
@@ -68,19 +83,19 @@
 				</label>
 				<h3 class="h3">Markups</h3>
 				<label class="label" for="markup"
-					>12 Month Markup
+					>*12 Month Markup
 					<input type="text" class="input" value={$markup12} name="markup12" required />
 				</label>
 				<label class="label" for="markup"
-					>24 Month Markup
+					>*24 Month Markup
 					<input type="text" class="input" value={$markup24} name="markup24" required />
 				</label>
 				<label class="label" for="markup"
-					>36 Month Markup
+					>*36 Month Markup
 					<input type="text" class="input" value={$markup36} name="markup36" required />
 				</label>
 				<label class="label" for="markup"
-					>48 Month Markup
+					>*48 Month Markup
 					<input type="text" class="input" value={$markup48} name="markup48" required />
 				</label>
 				<div class="flex flex-col gap-8">
@@ -138,11 +153,20 @@
 						</div>
 					{/if}
 					<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="label">
-						Label (e.g. "Class 8 +1000 for XYZ Dealer")
+						*Label (e.g. "Class 8 +1000 for XYZ Dealer")
 						<input type="text" name="label" value={$label} />
 					</label>
-					<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="customLogo"
-						>Link to a Custom Logo (Optional)
+					<label
+						class="flex flex-col gap-2 font-semibold justify-center text-base"
+						for="customLogo"
+					>
+						<div class="flex gap-2">
+							Link to a Custom Logo <button type="button" class="flex" on:click={openInstructions}>
+								<span class="flex w-4 h-4 mr-2">
+									<svelte:component this={InfoCircleIcon} />
+								</span>
+							</button>
+						</div>
 						<input class="input" type="text" name="customLogo" bind:value={$customLogo} />
 					</label>
 					<button class="btn variant-filled-primary">Generate</button>

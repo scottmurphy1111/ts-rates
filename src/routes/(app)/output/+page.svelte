@@ -55,7 +55,7 @@
 				</div>
 				<div class="w-1/3 ml-auto relative">
 					<div class="flex flex-col right-4 -top-6 text-xs absolute">
-						<button class="flex" on:click={openInstructions}>
+						<button type="button" class="flex" on:click={openInstructions}>
 							<span class="flex w-4 h-4 mr-2">
 								<svelte:component this={InfoCircleIcon} />
 							</span>

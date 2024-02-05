@@ -35,6 +35,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const formattedName = title?.toString().toLowerCase().replace(/\s/g, '_');
 	const subtitle = formData.get('subtitle');
 	const lowMileageCutoff = formData.get('lowMileageCutoff');
+	const isVocational = formData.get('isVocational');
 	const rowIds = formData.getAll('rowId');
 	const termValues = formData.getAll('termValue');
 	const termUnits = formData.getAll('termUnit');
@@ -45,6 +46,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const costsOlderHighMiles = formData.getAll('costOlderHighMiles');
 	const deductibles = formData.getAll('deductible');
 	const aggregateLimits = formData.getAll('aggregateLimit');
+	const truckTypes = formData.getAll('truckType');
 	const optionIds = formData.getAll('optionId');
 	const optionPackageNames = formData.getAll('optionPackageName');
 	const optionTermValues = formData.getAll('optionTermValue');
@@ -66,7 +68,8 @@ export const POST: RequestHandler = async ({ request }) => {
 					costOlderLowMiles: costsOlderLowMiles[i] as string,
 					costOlderHighMiles: costsOlderHighMiles[i] as string,
 					deductible: deductibles[i] as string,
-					aggregateLimit: aggregateLimits[i] as string
+					aggregateLimit: aggregateLimits[i] as string,
+					truckType: truckTypes[i] as string
 				}
 			};
 
@@ -102,13 +105,15 @@ export const POST: RequestHandler = async ({ request }) => {
 			name: formattedName as string,
 			title: title as string,
 			subtitle: subtitle as string,
-			lowMileageCutoff: lowMileageCutoff as string
+			lowMileageCutoff: lowMileageCutoff as string,
+			isVocational: isVocational === 'true' // Convert string to boolean
 		},
 		create: {
 			name: formattedName as string,
 			title: title as string,
 			subtitle: subtitle as string,
 			lowMileageCutoff: lowMileageCutoff as string,
+			isVocational: isVocational === 'true',
 			rows: {
 				create: formattedRows.map((row) => {
 					const rowId = Object.keys(row)[0];
@@ -124,7 +129,8 @@ export const POST: RequestHandler = async ({ request }) => {
 						costOlderLowMiles: rowValues.costOlderLowMiles as string,
 						costOlderHighMiles: rowValues.costOlderHighMiles as string,
 						deductible: rowValues.deductible as string,
-						aggregateLimit: rowValues.aggregateLimit as string
+						aggregateLimit: rowValues.aggregateLimit as string,
+						truckType: rowValues.truckType as string
 					};
 				})
 			},
@@ -178,6 +184,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				costOlderHighMiles: rowValues.costOlderHighMiles as string,
 				deductible: rowValues.deductible as string,
 				aggregateLimit: rowValues.aggregateLimit as string,
+				truckType: rowValues.truckType as string,
 				ratesheet: {
 					connect: {
 						id: ratesheetId as string
@@ -194,6 +201,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				costOlderHighMiles: rowValues.costOlderHighMiles as string,
 				deductible: rowValues.deductible as string,
 				aggregateLimit: rowValues.aggregateLimit as string,
+				truckType: rowValues.truckType as string,
 				ratesheet: {
 					connect: {
 						id: ratesheetId as string
