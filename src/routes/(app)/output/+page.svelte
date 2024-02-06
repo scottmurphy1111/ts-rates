@@ -44,7 +44,7 @@
 			<header
 				class="bg-gradient-to-br {colorFrom} {colorTo} p-8 w-full text-white inline-flex justify-between items-center gap-16 shadow-xl"
 			>
-				<div class="w-2/3 flex gap-4 items-center">
+				<div class="w-3/5 flex gap-4 items-center">
 					{#if output?.logoUrl}
 						<img class="w-auto max-h-24" src={output.logoUrl} alt="Custom Logo" />
 					{:else}
@@ -53,7 +53,7 @@
 						</a>
 					{/if}
 				</div>
-				<div class="w-1/3 ml-auto relative">
+				<div class="w-2/5 ml-auto relative">
 					<div class="flex flex-col right-4 -top-6 text-xs absolute">
 						<button type="button" class="flex" on:click={openInstructions}>
 							<span class="flex w-4 h-4 mr-2">
