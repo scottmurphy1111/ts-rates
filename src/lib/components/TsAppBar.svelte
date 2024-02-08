@@ -16,10 +16,10 @@
 				<img class="hidden dark:block" src={TsLogoDark} alt="ts-logo-dark" />
 			</a>
 			<h4
-				class="h4 text-primary-500 font-semibold flex gap-2 item-center text-base bg-white rounded-2xl pl-4 overflow-hidden shadow"
+				class="h4 text-primary-500 font-semibold flex gap-2 item-center text-base bg-white rounded-2xl px-4 py-1 overflow-hidden shadow"
 			>
-				<span class="self-center">Rates Tool</span>
-				<span class="text-lg self-end w-8 h-8 relative -right-1 -bottom-1.5">
+				<span class="self-center">Ratesheet Tool</span>
+				<span class="text-lg self-center w-4 h-4">
 					<svelte:component this={GreedIcon} />
 				</span>
 			</h4>
