@@ -24,6 +24,7 @@ export default {
       slate: colors.slate,
       stone: colors.stone,
       amber: colors.amber,
+      red: colors.red,
       blue: colors.blue,
       sky: colors.sky,
       indigo: colors.indigo,
