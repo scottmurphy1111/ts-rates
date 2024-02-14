@@ -1,7 +1,10 @@
 import { client } from '$lib/server/prisma';
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, setHeaders }) => {
+	setHeaders({
+		'Access-Control-Allow-Origin': '*'
+	});
 	const id = url.searchParams.get('id');
 
 	if (id) {
