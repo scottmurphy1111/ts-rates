@@ -4,10 +4,31 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 export const GET: RequestHandler = async ({ url }) => {
 	const id = url.searchParams.get('id');
 
-	const ratesheet = await client.ratesheet.findUnique({
-		where: {
-			id: id as string
-		},
+	if (id) {
+		const ratesheet = await client.ratesheet.findUnique({
+			where: {
+				id: id as string
+			},
+			include: {
+				rows: true,
+				options: true,
+				disclosuresSet: {
+					include: {
+						disclosures: true
+					}
+				},
+				coveragesSet: {
+					include: {
+						coverages: true
+					}
+				}
+			}
+		});
+
+		return json(ratesheet);
+	}
+
+	const ratesheets = await client.ratesheet.findMany({
 		include: {
 			rows: true,
 			options: true,
@@ -24,7 +45,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		}
 	});
 
-	return json(ratesheet);
+	return json(ratesheets);
 };
 
 export const POST: RequestHandler = async ({ request }) => {
