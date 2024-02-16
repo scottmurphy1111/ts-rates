@@ -17,6 +17,11 @@
 		{} as Record<string, { markup: string }>
 	);
 
+	const termHeaderVocation = () =>
+		ratesheetData.lowMileageCutoff?.toLowerCase() === 'n/a'
+			? `Term / Type  (All years / Unlimited Miles)`
+			: `Term / Type (All years / 0 - ${ratesheetData.lowMileageCutoff}k miles)`;
+
 	$: rateColHeaders = [
 		'Term / Mileage Limits',
 		`${new Date().getFullYear() - 4} &amp; Newer <br /> 0-${ratesheetData.lowMileageCutoff}K`,
@@ -27,12 +32,7 @@
 		'Aggregate Limit'
 	];
 
-	$: rateColHeadersVocational = [
-		`Term / Type (All years / 0 - ${ratesheetData.lowMileageCutoff}k miles)`,
-		'Cost',
-		'Deductible',
-		'Aggregate Limit'
-	];
+	$: rateColHeadersVocational = [termHeaderVocation(), 'Cost', 'Deductible', 'Aggregate Limit'];
 
 	const ratesHeadersCount = (node: HTMLDivElement) => {
 		node.style.gridTemplateColumns = `repeat(${rateColHeaders.length}, minmax(min-content, auto))`;

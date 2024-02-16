@@ -147,7 +147,7 @@
 				return;
 			}
 
-			await fetch(`/api/coverages?id=${id}`, {
+			await fetch(`/api/coverages?id=${id}&coveragesSetId=${coveragesSet?.id}`, {
 				method: 'DELETE'
 			})
 				.then(async (res) => {

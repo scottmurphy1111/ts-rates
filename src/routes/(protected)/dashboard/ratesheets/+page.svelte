@@ -158,6 +158,25 @@
 	const clearRatesheet = () => {
 		ratesheet = null;
 	};
+
+	const cloneRatesheet = async (e: Event) => {
+		pendingStore.set(true);
+		await fetch(`/api/ratesheets/clone?ratesheetId=${ratesheet?.id}`, {
+			method: 'POST'
+		})
+			.then(async (res) => {
+				if (res.ok) {
+					toastStore.trigger({ message: '👍 Ratesheet cloned successfully' });
+					ratesheet = (await res.json()) as RatesheetWithIncludes;
+					invalidate('data:ratesheets');
+					pendingStore.set(false);
+				}
+			})
+			.catch((err) => {
+				toastStore.trigger({ message: `❗️ Error cloning ratesheet ${err}` });
+				pendingStore.set(false);
+			});
+	};
 </script>
 
 {#if !ratesheet}
@@ -197,33 +216,45 @@
 		<form class="flex flex-col gap-24" on:submit|preventDefault={handleSave} method="POST">
 			<input type="hidden" name="ratesheetId" value={ratesheet.id} />
 			<div
-				class="flex gap-2 justify-between sticky top-0 bg-surface-50-900-token z-10 px-8 py-4 -mx-8 border-b border-surface-100-800-token"
+				class="flex flex-col gap-2 justify-between sticky top-0 bg-surface-50-900-token z-10 px-8 py-4 -mx-8 border-b border-surface-100-800-token"
 			>
-				<div class="inline-flex gap-4">
-					<h2 class="h2">{ratesheet.name}</h2>
-					{#if ratesheet.id !== 'new'}
-						<button
-							type="button"
-							on:click={deleteRatesheet}
-							class="btn bg-gradient-to-br from-error-600 to-error-700 text-white dark:from-error-600 dark:to-error-700"
-						>
-							Delete
-						</button>
-					{/if}
+				<div class="flex gap-2 justify-between w-full">
+					<h2 class="h2 break-all">{ratesheet.name}</h2>
 					<div class="flex flex-col text-xs">
 						<span>Created {format(ratesheet.createdAt, 'MM/dd/yyyy - hh:mm:ss a')}</span>
 						<span>Last Updated {format(ratesheet.updatedAt, 'MM/dd/yyyy - hh:mm:ss a')}</span>
 					</div>
 				</div>
-				<div class="inline-flex gap-2">
-					<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Save</button>
-					<button
-						type="button"
-						on:click={clearRatesheet}
-						class="btn bg-gradient-to-br variant-filled-tertiary"
-					>
-						Cancel
-					</button>
+				<div class="inline-flex gap-4 justify-between">
+					{#if ratesheet.id !== 'new'}
+						<div class="flex gap-2">
+							<button
+								type="button"
+								on:click={deleteRatesheet}
+								class="btn bg-gradient-to-br from-error-600 to-error-700 text-white dark:from-error-600 dark:to-error-700"
+							>
+								Delete
+							</button>
+							<button
+								disabled={!ratesheet?.disclosuresSetId || !ratesheet?.coveragesSetId}
+								class="btn bg-gradient-to-br from-success-600 to-success-700 text-white dark:from-success-600 dark:to-success-700"
+								type="button"
+								on:click={cloneRatesheet}
+							>
+								Clone
+							</button>
+						</div>
+					{/if}
+					<div class="inline-flex gap-2">
+						<button class="btn bg-gradient-to-br variant-gradient-primary-secondary">Save</button>
+						<button
+							type="button"
+							on:click={clearRatesheet}
+							class="btn bg-gradient-to-br variant-filled-tertiary"
+						>
+							Cancel
+						</button>
+					</div>
 				</div>
 			</div>
 			<div class="flex flex-col gap-4">

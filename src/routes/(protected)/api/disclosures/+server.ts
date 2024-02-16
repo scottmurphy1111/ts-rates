@@ -3,18 +3,18 @@ import { type RequestHandler, json } from '@sveltejs/kit';
 import { client } from '$lib/server/prisma';
 
 export const GET: RequestHandler = async ({ url }) => {
-  const id = url.searchParams.get('id');
+	const id = url.searchParams.get('id');
 
-  const disclosuresSet = await client.disclosuresSet.findUnique({
-    where: {
-      id: id as string
-    },
-    include: {
-      disclosures: true
-    }
-  });
+	const disclosuresSet = await client.disclosuresSet.findUnique({
+		where: {
+			id: id as string
+		},
+		include: {
+			disclosures: true
+		}
+	});
 
-  return json(disclosuresSet);
+	return json(disclosuresSet);
 };
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -110,7 +110,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 export const DELETE: RequestHandler = async ({ url }) => {
 	const id = url.searchParams.get('id');
-	
+	const disclosuresSetId = url.searchParams.get('disclosuresSetId');
 
 	await client.disclosure.delete({
 		where: {
@@ -118,7 +118,14 @@ export const DELETE: RequestHandler = async ({ url }) => {
 		}
 	});
 
-	
+	const updatedDisclosuresSet = await client.disclosuresSet.findUnique({
+		where: {
+			id: disclosuresSetId as string
+		},
+		include: {
+			disclosures: true
+		}
+	});
 
-	return json({message: '👍 Disclosure deleted successfully'});
+	return json(updatedDisclosuresSet);
 };

@@ -148,12 +148,13 @@
 				return;
 			}
 
-			await fetch(`/api/disclosures?id=${id}`, {
+			await fetch(`/api/disclosures?id=${id}&disclosuresSetId=${disclosuresSet?.id}`, {
 				method: 'DELETE'
 			})
 				.then(async (res) => {
 					if (res.ok) {
 						invalidate('form:disclosuresSet');
+						disclosuresSet = (await res.json()) as DisclosuresSetWithIncludes;
 						orderedDisclosures =
 							disclosuresSet?.disclosures.sort((a, b) => Number(a.order) - Number(b.order)) ?? [];
 						toastStore.trigger({ message: '👍 Disclosure deleted successfully' });

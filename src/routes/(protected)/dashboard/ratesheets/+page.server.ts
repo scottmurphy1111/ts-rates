@@ -8,6 +8,7 @@ import type {
 
 export const load: PageServerLoad = async ({ depends }) => {
 	depends('data:ratesheets');
+	depends('data:ratesheets/clone');
 	let ratesheets = await client.ratesheet.findMany({
 		include: {
 			rows: true,
