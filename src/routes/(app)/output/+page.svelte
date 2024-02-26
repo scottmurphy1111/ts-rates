@@ -11,12 +11,14 @@
 	import type { PageData } from './$types';
 	import PrintInstructions from '$lib/assets/images/print-instructions.png';
 	import InfoCircleIcon from '$lib/assets/icons/info-circle.svelte';
-	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore, setModeCurrent, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { getContext, onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import { modeCurrent } from '@skeletonlabs/skeleton';
 
-	$: darkMode = $modeCurrent;
+	onMount(() => {
+		setModeCurrent(true);
+	});
 
 	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
@@ -75,11 +77,7 @@
 
 					{#if output?.logoUrl}
 						<a href="/">
-							{#if darkMode}
-								<img class="w-2/5 mt-4" src={logo} alt="ts-logo" />
-							{:else}
-								<img class="w-2/5 mt-4" src={logoDark} alt="ts-logo" />
-							{/if}
+							<img class="w-2/5 mt-4" src={logo} alt="ts-logo" />
 						</a>
 					{/if}
 				</div>
@@ -96,11 +94,7 @@
 				<div class="flex gap-4 justify-between">
 					<div class="flex flex-col gap-1">
 						<a href="http://trucksuite.com">
-							{#if darkMode}
-								<img class="block w-full" src={logo} alt="ts-logo" />
-							{:else}
-								<img class="block w-full" src={logoDark} alt="ts-logo" />
-							{/if}
+							<img class="block w-full" src={logo} alt="ts-logo" />
 						</a>
 						<a class="text-xl" href="tel:336-565-7100">336-565-7100</a>
 						<a class="text-base text-blue-500 mb-1" href="mailto:support@trucksuite.com"
@@ -111,11 +105,7 @@
 					</div>
 					<div class="flex flex-col gap-1">
 						<div class="flex gap-4">
-							{#if darkMode}
-								<img class="w-[60px] mb-4" src={Mobile} alt="mobile-app" />
-							{:else}
-								<img class="w-[60px] mb-4" src={MobileDark} alt="mobile-app" />
-							{/if}
+							<img class="w-[60px] mb-4" src={Mobile} alt="mobile-app" />
 							<img class="w-[100px] mb-4" src={QrCode} alt="qr-code" />
 						</div>
 						<p class="mb-2">Download the TruckSuite Mobile App</p>
