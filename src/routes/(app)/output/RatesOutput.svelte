@@ -59,7 +59,7 @@
 		>
 			{#each rateColHeadersVocational as header}
 				<div
-					class="flex flex-col text-base font-extrabold bg-white min-w-full px-2 pb-2 h-full justify-end"
+					class="flex flex-col text-base font-extrabold bg-white dark:bg-black min-w-full px-2 pb-2 h-full justify-end"
 				>
 					{@html header}
 				</div>
@@ -69,7 +69,7 @@
 					{#each Object.entries(row) as [key, value], i}
 						{#if (key === 'costNewerLowMiles' || key === 'deductible' || key === 'aggregateLimit') && value !== null}
 							<div
-								class="inline-flex items-baseline text-base font-semibold bg-white min-w-full h-full p-2"
+								class="inline-flex items-baseline text-base font-semibold bg-white dark:bg-black min-w-full h-full p-2"
 							>
 								${new Intl.NumberFormat('en-US', {
 									style: 'decimal',
@@ -81,7 +81,7 @@
 						{/if}
 						{#if key === 'termValue'}
 							<div
-								class="inline-flex items-baseline text-base font-semibold bg-white min-w-full h-full p-2"
+								class="inline-flex items-baseline text-base font-semibold bg-white dark:bg-black min-w-full h-full p-2"
 							>
 								{value}
 								{row['termUnit']} / {(
@@ -89,12 +89,6 @@
 								).replace(/([A-Z])/g, ' $1')}
 							</div>
 						{/if}
-
-						<!-- {#if i !== 0}
-							key {key}<br />
-							value {value} <br />
-							i {i} <br />
-						{/if} -->
 					{/each}
 				{/each}
 			{/if}
@@ -109,7 +103,7 @@
 		>
 			{#each rateColHeaders as header}
 				<div
-					class="flex flex-col text-base font-extrabold bg-white min-w-full px-2 pb-2 h-full justify-end"
+					class="flex flex-col text-base font-extrabold bg-white dark:bg-black min-w-full px-2 pb-2 h-full justify-end"
 				>
 					{@html header}
 				</div>
@@ -119,7 +113,7 @@
 					{#each Object.entries(row) as [key, value], i}
 						{#if i !== 0 && key !== 'termValue' && key !== 'termUnit' && key !== 'mileageValue' && key !== 'ratesheetId' && typeof value === 'string'}
 							<div
-								class="inline-flex items-baseline text-base font-semibold bg-white min-w-full h-full p-2"
+								class="inline-flex items-baseline text-base font-semibold bg-white dark:bg-black min-w-full h-full p-2"
 							>
 								${new Intl.NumberFormat('en-US', {
 									style: 'decimal',
@@ -131,7 +125,7 @@
 						{/if}
 						{#if key === 'termValue'}
 							<div
-								class="inline-flex items-baseline text-base font-semibold bg-white min-w-full h-full p-2"
+								class="inline-flex items-baseline text-base font-semibold bg-white dark:bg-black min-w-full h-full p-2"
 							>
 								{value}
 								{row['termUnit']} / {row['mileageValue']}K

@@ -1,8 +1,9 @@
 <script lang="ts">
-	import TsLogoDark from '$lib/assets/images/ts-logo-dark.svg';
-	import TsLogo from '$lib/assets/images/ts-logo.svg';
+	import logo from '$lib/assets/images/ts-logo.svg';
+	import logoDark from '$lib/assets/images/ts-logo-dark.svg';
 	import QrCode from '$lib/assets/images/qr-code.svg';
 	import Mobile from '$lib/assets/images/mobile.svg';
+	import MobileDark from '$lib/assets/images/mobileDark.svg';
 	import RatesOutput from './RatesOutput.svelte';
 	import OptionsOutput from './OptionsOutput.svelte';
 	import DisclosuresOutput from './DisclosuresOutput.svelte';
@@ -13,6 +14,9 @@
 	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
 	import { getContext, onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
+	import { modeCurrent } from '@skeletonlabs/skeleton';
+
+	$: darkMode = $modeCurrent;
 
 	const pendingStore = getContext<Writable<Boolean>>('pendingStore');
 
@@ -49,7 +53,7 @@
 						<img class="w-auto max-h-24" src={output.logoUrl} alt="Custom Logo" />
 					{:else}
 						<a href="/">
-							<img class="w-full" src={TsLogoDark} alt="ts-logo-dark" />
+							<img class="block w-full" src={logoDark} alt="ts-logo" />
 						</a>
 					{/if}
 				</div>
@@ -71,7 +75,11 @@
 
 					{#if output?.logoUrl}
 						<a href="/">
-							<img class="w-2/5 mt-4" src={TsLogoDark} alt="ts-logo-dark" />
+							{#if darkMode}
+								<img class="block w-full" src={logo} alt="ts-logo" />
+							{:else}
+								<img class="block w-full" src={logoDark} alt="ts-logo" />
+							{/if}
 						</a>
 					{/if}
 				</div>
@@ -84,11 +92,15 @@
 					<CoveragesOutput ratesheetData={ratesheet} color={output.color} />
 				</div>
 			</main>
-			<footer class="flex flex-col gap-4 bg-white p-8">
+			<footer class="flex flex-col gap-4 bg-white dark:bg-black p-8">
 				<div class="flex gap-4 justify-between">
 					<div class="flex flex-col gap-1">
 						<a href="http://trucksuite.com">
-							<img class="w-full mb-4" src={TsLogo} alt="ts-logo" />
+							{#if darkMode}
+								<img class="block w-full" src={logo} alt="ts-logo" />
+							{:else}
+								<img class="block w-full" src={logoDark} alt="ts-logo" />
+							{/if}
 						</a>
 						<a class="text-xl" href="tel:336-565-7100">336-565-7100</a>
 						<a class="text-base text-blue-500 mb-1" href="mailto:support@trucksuite.com"
@@ -99,7 +111,11 @@
 					</div>
 					<div class="flex flex-col gap-1">
 						<div class="flex gap-4">
-							<img class="w-[60px] mb-4" src={Mobile} alt="mobile-app" />
+							{#if darkMode}
+								<img class="w-[60px] mb-4" src={Mobile} alt="mobile-app" />
+							{:else}
+								<img class="w-[60px] mb-4" src={MobileDark} alt="mobile-app" />
+							{/if}
 							<img class="w-[100px] mb-4" src={QrCode} alt="qr-code" />
 						</div>
 						<p class="mb-2">Download the TruckSuite Mobile App</p>

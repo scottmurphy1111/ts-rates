@@ -107,7 +107,7 @@
 			use:optionsHeadersCount
 		>
 			<div
-				class="flex flex-col text-base font-extrabold bg-white min-w-full px-2 pb-2 h-full justify-end"
+				class="flex flex-col text-base font-extrabold bg-white dark:bg-black min-w-full px-2 pb-2 h-full justify-end"
 			>
 				Term Lengths
 			</div>
@@ -121,7 +121,9 @@
 				return 0;
 			}) as [key, value], i}
 				{#if value[0].termValue !== 'All'}
-					<div class="flex flex-col text-base font-extrabold bg-white min-w-full h-full p-2">
+					<div
+						class="flex flex-col text-base font-extrabold bg-white dark:bg-black min-w-full h-full p-2"
+					>
 						{@html key}
 					</div>
 				{/if}
@@ -131,14 +133,14 @@
 					{#each val as option, idx}
 						{#if idx === 0}
 							<div
-								class="inline-flex items-baseline text-base font-semibold bg-white min-w-full h-full p-2"
+								class="inline-flex items-baseline text-base font-semibold bg-white dark:bg-black min-w-full h-full p-2"
 							>
 								{option.termValue}
 								{option.termValue === 'All' ? '' : option.termUnit}
 							</div>
 						{/if}
 						<div
-							class="inline-flex text-base font-semibold bg-white min-w-full h-full p-2 justify-between items-center"
+							class="inline-flex text-base font-semibold bg-white dark:bg-black min-w-full h-full p-2 justify-between items-center"
 						>
 							${new Intl.NumberFormat('en-US', {
 								style: 'decimal',

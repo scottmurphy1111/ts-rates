@@ -1,13 +1,17 @@
 <script lang="ts">
 	import logo from '$lib/assets/images/ts-logo.svg';
+	import logoDark from '$lib/assets/images/ts-logo-dark.svg';
 	import JustDriveIcon from '$lib/assets/icons/just-drive.svelte';
+	import JustDriveIconDark from '$lib/assets/icons/just-drive-dark.svelte';
 	import { writable, type Writable } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	import { getContext } from 'svelte';
 	import InfoCircleIcon from '$lib/assets/icons/info-circle.svelte';
-	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import { getModalStore, getModeUserPrefers, type ModalSettings } from '@skeletonlabs/skeleton';
 	import CustomLogoInstructions from '$lib/assets/images/custom-logo-instructions.png';
+
+	$: darkMode = getModeUserPrefers();
 
 	export let data: PageData;
 
@@ -53,7 +57,11 @@
 	<div class="card shadow-xl min-w-1/4 p-8 justify-center items-center">
 		<div class="flex flex-col mb-4 gap-4 items-center justify-center w-full">
 			<a class="flex items-center justify-center max-w-[400px]" href="/dashboard">
-				<img class="block w-full" src={logo} alt="ts-logo" />
+				{#if darkMode}
+					<img class="block w-full" src={logo} alt="ts-logo" />
+				{:else}
+					<img class="block w-full" src={logoDark} alt="ts-logo" />
+				{/if}
 			</a>
 			<h2 class="text-xl text-center p-0">Ratesheet Generator</h2>
 		</div>
@@ -154,7 +162,7 @@
 					{/if}
 					<label class="flex flex-col gap-2 font-semibold justify-center text-base" for="label">
 						*Label (e.g. "Class 8 +1000 for XYZ Dealer")
-						<input type="text" name="label" value={$label} />
+						<input type="text" class="input" name="label" value={$label} />
 					</label>
 					<label
 						class="flex flex-col gap-2 font-semibold justify-center text-base"
@@ -175,7 +183,11 @@
 		</form>
 		<div class="w-full mt-8 flex justify-center items-center">
 			<div class="w-2/5">
-				<JustDriveIcon />
+				{#if darkMode}
+					<JustDriveIcon />
+				{:else}
+					<JustDriveIconDark />
+				{/if}
 			</div>
 		</div>
 	</div>
