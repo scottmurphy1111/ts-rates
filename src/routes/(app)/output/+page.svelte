@@ -53,7 +53,7 @@
 						<img class="w-auto max-h-24" src={output.logoUrl} alt="Custom Logo" />
 					{:else}
 						<a href="/">
-							<img class="block w-full" src={logoDark} alt="ts-logo" />
+							<img class="w-full" src={logoDark} alt="ts-logo" />
 						</a>
 					{/if}
 				</div>
@@ -76,9 +76,9 @@
 					{#if output?.logoUrl}
 						<a href="/">
 							{#if darkMode}
-								<img class="block w-full" src={logo} alt="ts-logo" />
+								<img class="w-2/5 mt-4" src={logo} alt="ts-logo" />
 							{:else}
-								<img class="block w-full" src={logoDark} alt="ts-logo" />
+								<img class="w-2/5 mt-4" src={logoDark} alt="ts-logo" />
 							{/if}
 						</a>
 					{/if}
