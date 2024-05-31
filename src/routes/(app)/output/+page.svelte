@@ -77,7 +77,7 @@
 
 					{#if output?.logoUrl}
 						<a href="/">
-							<img class="w-2/5 mt-4" src={logo} alt="ts-logo" />
+							<img class="w-2/5 mt-4" src={logoDark} alt="ts-logo" />
 						</a>
 					{/if}
 				</div>
