@@ -16,7 +16,10 @@ export const GET: RequestHandler = async ({ url }) => {
 	return json(rateOutput);
 };
 
-export const POST: RequestHandler = async ({ url, locals }) => {
+export const POST: RequestHandler = async ({ url, locals, request }) => {
+	console.log('url', url);
+	console.log('body', request.body);
+
 	const userId = url.searchParams.get('userId') || locals.session?.userId;
 	const selectedRatesheetId = url.searchParams.get('selectedRatesheetId');
 	const label = url.searchParams.get('label');
