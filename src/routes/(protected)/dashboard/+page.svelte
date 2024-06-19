@@ -97,7 +97,9 @@
 	<div class="flex flex-col">
 		<div class="flex gap-4 justify-center items-center h-screen">
 			<h3 class="h3">
-				You do not have access yet, please email <span class="link">scott@trucksuite.com</span>
+				You do not have access yet, please email <span class="link"
+					>scott.murphy@trucksuite.com</span
+				>
 			</h3>
 		</div>
 	</div>
