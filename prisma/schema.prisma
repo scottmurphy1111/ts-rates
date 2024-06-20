@@ -5,7 +5,8 @@ generator client {
 datasource db {
   provider          = "mysql"
   url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("DATABASE_URL_DEV")
+  // url               = env("DEV_DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
   relationMode      = "prisma"
 }
 
@@ -98,14 +99,15 @@ model Coverage {
 }
 
 model RateOutput {
-  id          String   @id @default(uuid())
-  createdAt   DateTime @default(now())
-  userId      String   @default("")
-  label       String   @default("")
-  ratesheetId String
-  color       String   @default("primary")
-  logoUrl     String?
-  markups     Markup[]
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now())
+  userId            String   @default("")
+  label             String   @default("")
+  ratesheetId       String
+  color             String   @default("primary")
+  logoUrl           String?
+  markups           Markup[]
+  locationProgramId String?
 }
 
 model Markup {
