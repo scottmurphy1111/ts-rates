@@ -16,19 +16,34 @@ export const GET: RequestHandler = async ({ url }) => {
 	return json(rateOutput);
 };
 
-export const POST: RequestHandler = async ({ url, locals, request }) => {
-	console.log('url', url);
-	console.log('body', request.body);
+type RateOutputJSON = {
+	locationProgramId: string;
+	userId: string;
+	selectedRatesheetId: string;
+	label: string;
+	markup12: string;
+	markup24: string;
+	markup36: string;
+	markup48: string;
+	selectedColor: string;
+	customLogo: string | null;
+};
 
-	const userId = url.searchParams.get('userId') || locals.session?.userId;
-	const selectedRatesheetId = url.searchParams.get('selectedRatesheetId');
-	const label = url.searchParams.get('label');
-	const markup12 = url.searchParams.get('markup12');
-	const markup24 = url.searchParams.get('markup24');
-	const markup36 = url.searchParams.get('markup36');
-	const markup48 = url.searchParams.get('markup48');
-	const selectedColor = url.searchParams.get('selectedColor');
-	const customLogo = url.searchParams.get('customLogo');
+export const POST: RequestHandler = async ({ request }) => {
+	const rawBody = (await request.json()) as RateOutputJSON;
+	console.log('rawBody', rawBody);
+	const {
+		locationProgramId,
+		userId,
+		selectedRatesheetId,
+		label,
+		markup12,
+		markup24,
+		markup36,
+		markup48,
+		selectedColor,
+		customLogo
+	} = rawBody;
 
 	// const selectedRatesheetId = data.get('selectedRatesheetId');
 	// const label = data.get('label');
@@ -61,6 +76,7 @@ export const POST: RequestHandler = async ({ url, locals, request }) => {
 	const rateOutput = await client.rateOutput.create({
 		data: {
 			userId,
+			locationProgramId: locationProgramId as string,
 			ratesheetId: selectedRatesheetId as string,
 			label: label as string,
 			markups: {
