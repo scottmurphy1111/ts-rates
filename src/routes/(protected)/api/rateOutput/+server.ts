@@ -77,7 +77,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const rateOutput = await client.rateOutput.upsert({
 		where: {
-			id: rateOutputId as string
+			id: (rateOutputId as string) || ''
 		},
 		update: {
 			userId,
