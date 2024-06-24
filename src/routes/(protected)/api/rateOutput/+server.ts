@@ -17,6 +17,7 @@ export const GET: RequestHandler = async ({ url }) => {
 };
 
 type RateOutputJSON = {
+	rateOutputId: string;
 	locationProgramId: string;
 	userId: string;
 	selectedRatesheetId: string;
@@ -33,6 +34,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const rawBody = (await request.json()) as RateOutputJSON;
 	console.log('rawBody', rawBody);
 	const {
+		rateOutputId,
 		locationProgramId,
 		userId,
 		selectedRatesheetId,
@@ -73,14 +75,41 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 	];
 
-	const rateOutput = await client.rateOutput.create({
-		data: {
+	const rateOutput = await client.rateOutput.upsert({
+		where: {
+			id: rateOutputId as string
+		},
+		update: {
 			userId,
 			locationProgramId: locationProgramId as string,
 			ratesheetId: selectedRatesheetId as string,
 			label: label as string,
 			markups: {
-				create: markupsData
+				deleteMany: {
+					rateOutputId: rateOutputId as string
+				},
+				createMany: {
+					data: markupsData.map((markup) => ({
+						termValue: markup.termValue,
+						markupValue: markup.markupValue
+					}))
+				}
+			},
+			color: selectedColor as string,
+			logoUrl: customLogo as string
+		},
+		create: {
+			userId,
+			locationProgramId: locationProgramId as string,
+			ratesheetId: selectedRatesheetId as string,
+			label: label as string,
+			markups: {
+				createMany: {
+					data: markupsData.map((markup) => ({
+						termValue: markup.termValue,
+						markupValue: markup.markupValue
+					}))
+				}
 			},
 			color: selectedColor as string,
 			logoUrl: customLogo as string
