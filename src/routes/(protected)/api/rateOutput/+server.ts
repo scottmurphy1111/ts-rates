@@ -116,7 +116,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 	});
 
-	return json(rateOutput.id);
+	return json({ id: rateOutput.id });
 };
 
 export const DELETE: RequestHandler = async ({ url }) => {
