@@ -20,7 +20,7 @@ type RateOutputJSON = {
 	rateOutputId: string;
 	locationProgramId: string;
 	userId: string;
-	selectedRatesheetId: string;
+	ratesheetId: string;
 	label: string;
 	markup12: string;
 	markup24: string;
@@ -32,12 +32,11 @@ type RateOutputJSON = {
 
 export const POST: RequestHandler = async ({ request }) => {
 	const rawBody = (await request.json()) as RateOutputJSON;
-	console.log('rawBody', rawBody);
 	const {
 		rateOutputId,
 		locationProgramId,
 		userId,
-		selectedRatesheetId,
+		ratesheetId,
 		label,
 		markup12,
 		markup24,
@@ -46,15 +45,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		selectedColor,
 		customLogo
 	} = rawBody;
-
-	// const selectedRatesheetId = data.get('selectedRatesheetId');
-	// const label = data.get('label');
-	// const markup12 = data.get('markup12');
-	// const markup24 = data.get('markup24');
-	// const markup36 = data.get('markup36');
-	// const markup48 = data.get('markup48');
-	// const selectedColor = data.get('selectedColor');
-	// const customLogo = data.get('customLogo');
 
 	const markupsData = [
 		{
@@ -75,47 +65,46 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 	];
 
-	const rateOutput = await client.rateOutput.upsert({
-		where: {
-			id: (rateOutputId as string) || ''
-		},
-		update: {
-			userId,
-			locationProgramId: locationProgramId as string,
-			ratesheetId: selectedRatesheetId as string,
-			label: label as string,
-			markups: {
-				deleteMany: {
-					rateOutputId: rateOutputId as string
+	let rateOutput;
+	if (rateOutputId) {
+		rateOutput = await client.rateOutput.update({
+			where: {
+				id: rateOutputId as string
+			},
+			data: {
+				markups: {
+					deleteMany: {
+						rateOutputId: rateOutputId as string
+					},
+					createMany: {
+						data: markupsData.map((markup) => ({
+							termValue: markup.termValue,
+							markupValue: markup.markupValue
+						}))
+					}
+				}
+			}
+		});
+	} else {
+		rateOutput = await client.rateOutput.create({
+			data: {
+				userId,
+				locationProgramId: locationProgramId as string,
+				ratesheetId,
+				label: label as string,
+				markups: {
+					createMany: {
+						data: markupsData.map((markup) => ({
+							termValue: markup.termValue,
+							markupValue: markup.markupValue
+						}))
+					}
 				},
-				createMany: {
-					data: markupsData.map((markup) => ({
-						termValue: markup.termValue,
-						markupValue: markup.markupValue
-					}))
-				}
-			},
-			color: selectedColor as string,
-			logoUrl: customLogo as string
-		},
-		create: {
-			userId,
-			locationProgramId: locationProgramId as string,
-			ratesheetId: selectedRatesheetId as string,
-			label: label as string,
-			markups: {
-				createMany: {
-					data: markupsData.map((markup) => ({
-						termValue: markup.termValue,
-						markupValue: markup.markupValue
-					}))
-				}
-			},
-			color: selectedColor as string,
-			logoUrl: customLogo as string
-		}
-	});
-
+				color: selectedColor as string,
+				logoUrl: customLogo as string
+			}
+		});
+	}
 	return json({ id: rateOutput.id });
 };
 
